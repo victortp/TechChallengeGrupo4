@@ -1,0 +1,6 @@
+@ContatosGrupo4.Api_HostAddress = http://localhost:5143
+
+GET {{ContatosGrupo4.Api_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
