@@ -1,4 +1,4 @@
-﻿using ContatosGrupo4.Application.UseCases;
+﻿using ContatosGrupo4.Application.UseCases.Usuarios;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace ContatosGrupo4.Application.Extensions
@@ -11,7 +11,7 @@ namespace ContatosGrupo4.Application.Extensions
             services.AddScoped<ObterTodosUsuariosUseCase>();
             services.AddScoped<ObterUsuarioPorIdUseCase>();
             services.AddScoped<AtualizaUsuarioUseCase>();
-            services.AddScoped< ExcluirUsuarioUseCase> ();
+            services.AddScoped<ExcluirUsuarioUseCase> ();
 
             return services;
         }

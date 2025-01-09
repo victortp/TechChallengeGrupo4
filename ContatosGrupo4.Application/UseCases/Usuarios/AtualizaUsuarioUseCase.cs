@@ -2,7 +2,7 @@
 using ContatosGrupo4.Domain.Entities;
 using ContatosGrupo4.Domain.Interfaces;
 
-namespace ContatosGrupo4.Application.UseCases
+namespace ContatosGrupo4.Application.UseCases.Usuarios
 {
     public class AtualizaUsuarioUseCase
     {
@@ -10,7 +10,7 @@ namespace ContatosGrupo4.Application.UseCases
         private readonly ObterUsuarioPorIdUseCase _obterUsuarioPorIdUseCase;
 
         public AtualizaUsuarioUseCase(
-            IUsuarioRepository usuarioRepository, 
+            IUsuarioRepository usuarioRepository,
             ObterUsuarioPorIdUseCase obterUsuarioPorIdUseCase)
         {
             _usuarioRepository = usuarioRepository;
@@ -33,7 +33,7 @@ namespace ContatosGrupo4.Application.UseCases
             catch (ArgumentException)
             {
                 throw;
-            }            
+            }
         }
     }
 }

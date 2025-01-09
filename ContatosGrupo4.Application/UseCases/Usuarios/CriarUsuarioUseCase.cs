@@ -2,7 +2,7 @@
 using ContatosGrupo4.Domain.Entities;
 using ContatosGrupo4.Domain.Interfaces;
 
-namespace ContatosGrupo4.Application.UseCases
+namespace ContatosGrupo4.Application.UseCases.Usuarios
 {
     public class CriarUsuarioUseCase
     {
