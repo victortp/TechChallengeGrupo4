@@ -15,8 +15,4 @@
     <ProjectReference Include="..\ContatosGrupo4.Infrastructure\ContatosGrupo4.Infrastructure.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Controllers\" />
-  </ItemGroup>
-
 </Project>

@@ -12,7 +12,6 @@ namespace ContatosGrupo4.Infrastructure.Data.Configurations
             builder.HasKey(x => x.Id);
             builder.Property(x => x.Id)
                 .HasColumnType("int")
-                .ValueGeneratedNever()
                 .UseIdentityColumn();
             builder.Property(x => x.DataCriacao)
                 .HasColumnType("datetime")
