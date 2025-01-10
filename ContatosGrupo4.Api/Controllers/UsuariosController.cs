@@ -56,7 +56,7 @@ namespace ContatosGrupo4.Api.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CriarUsuario([FromBody] UsuarioCriarDto usuarioCriarDto)
+        public async Task<IActionResult> CriarUsuario([FromBody] CriarUsuarioDto usuarioCriarDto)
         {
             if (usuarioCriarDto == null)
             {

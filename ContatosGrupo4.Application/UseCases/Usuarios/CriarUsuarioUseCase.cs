@@ -13,7 +13,7 @@ namespace ContatosGrupo4.Application.UseCases.Usuarios
             _usuarioRepository = usuarioRepository;
         }
 
-        public async Task<Usuario> ExecuteAsync(UsuarioCriarDto dto)
+        public async Task<Usuario> ExecuteAsync(CriarUsuarioDto dto)
         {
             if (string.IsNullOrEmpty(dto.Login))
             {

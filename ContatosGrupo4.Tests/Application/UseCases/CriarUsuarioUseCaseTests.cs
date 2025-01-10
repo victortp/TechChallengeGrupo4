@@ -14,7 +14,7 @@ namespace ContatosGrupo4.Tests.Application.UseCases
         {
             var usuarioRepository = new Mock<IUsuarioRepository>();
             var useCase = new CriarUsuarioUseCase(usuarioRepository.Object);
-            var dto = new UsuarioCriarDto() { Login = "teste", Senha = "teste" };
+            var dto = new CriarUsuarioDto() { Login = "teste", Senha = "teste" };
             var usuarioEsperado = new Usuario() { Login = "teste", Senha = "teste" };
             usuarioRepository
                 .Setup(r => r.AdicionarAsync(It.IsAny<Usuario>()))
@@ -36,7 +36,7 @@ namespace ContatosGrupo4.Tests.Application.UseCases
         {
             var usuarioRepository = new Mock<IUsuarioRepository>();
             var useCase = new CriarUsuarioUseCase(usuarioRepository.Object);
-            var dto = new UsuarioCriarDto() { Login = login!, Senha = senha! };
+            var dto = new CriarUsuarioDto() { Login = login!, Senha = senha! };
             var act = async () => { await useCase.ExecuteAsync(dto); };
 
             await act.Should().ThrowAsync<ArgumentNullException>()
@@ -48,7 +48,7 @@ namespace ContatosGrupo4.Tests.Application.UseCases
         {
             var usuarioRepository = new Mock<IUsuarioRepository>();
             var useCase = new CriarUsuarioUseCase(usuarioRepository.Object);
-            var dto = new UsuarioCriarDto() { Login = "teste", Senha = "teste" };
+            var dto = new CriarUsuarioDto() { Login = "teste", Senha = "teste" };
             var usuarioEsperado = new Usuario() { Login = "teste", Senha = "teste" };
 
             usuarioRepository
@@ -66,7 +66,7 @@ namespace ContatosGrupo4.Tests.Application.UseCases
         {
             var usuarioRepository = new Mock<IUsuarioRepository>();
             var useCase = new CriarUsuarioUseCase(usuarioRepository.Object);
-            var dto = new UsuarioCriarDto() { Login = "teste", Senha = "teste" };
+            var dto = new CriarUsuarioDto() { Login = "teste", Senha = "teste" };
             var usuarioEsperado = new Usuario() { Login = "teste", Senha = "teste" };
 
             usuarioRepository
