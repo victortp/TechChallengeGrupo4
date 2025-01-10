@@ -17,7 +17,7 @@ namespace ContatosGrupo4.Application.UseCases.Usuarios
             _obterUsuarioPorIdUseCase = obterUsuarioPorIdUseCase;
         }
 
-        public async Task<Usuario> ExecuteAsync(UsuarioAtualizarDto usuario)
+        public async Task<Usuario> ExecuteAsync(AtualizarUsuarioDto usuario)
         {
             try
             {

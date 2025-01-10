@@ -1,6 +1,6 @@
 ﻿namespace ContatosGrupo4.Application.DTOs
 {
-    public class UsuarioAtualizarDto
+    public class AtualizarUsuarioDto
     {
         public int Id { get; set; }
         public string Login { get; set; } = null!;

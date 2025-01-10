@@ -83,7 +83,7 @@ namespace ContatosGrupo4.Api.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> AtualizarUsuario(int id, [FromBody] UsuarioAtualizarDto usuarioAtualizarDto)
+        public async Task<IActionResult> AtualizarUsuario(int id, [FromBody] AtualizarUsuarioDto usuarioAtualizarDto)
         {
             if (usuarioAtualizarDto == null || id != usuarioAtualizarDto.Id)
             {
