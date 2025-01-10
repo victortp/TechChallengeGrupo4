@@ -30,7 +30,7 @@ namespace ContatosGrupo4.Application.UseCases.Usuarios
                 await _usuarioRepository.AtualizarAsync(usuarioExistente);
                 return usuarioExistente;
             }
-            catch (ArgumentException)
+            catch (Exception)
             {
                 throw;
             }
