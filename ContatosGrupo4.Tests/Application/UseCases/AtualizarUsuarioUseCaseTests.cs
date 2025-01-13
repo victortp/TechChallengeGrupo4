@@ -14,7 +14,7 @@ namespace ContatosGrupo4.Tests.Application.UseCases
         {
             var usuarioRepository = new Mock<IUsuarioRepository>();
             var obterUsuarioPorIdUSeCase = new ObterUsuarioPorIdUseCase(usuarioRepository.Object);
-            var useCase = new AtualizaUsuarioUseCase(usuarioRepository.Object, obterUsuarioPorIdUSeCase);
+            var useCase = new AtualizarUsuarioUseCase(usuarioRepository.Object, obterUsuarioPorIdUSeCase);
             var dto = new AtualizarUsuarioDto() { Id = 1 };
 
             usuarioRepository
@@ -32,7 +32,7 @@ namespace ContatosGrupo4.Tests.Application.UseCases
         {
             var usuarioRepository = new Mock<IUsuarioRepository>();
             var obterUsuarioPorIdUSeCase = new ObterUsuarioPorIdUseCase(usuarioRepository.Object);
-            var useCase = new AtualizaUsuarioUseCase(usuarioRepository.Object, obterUsuarioPorIdUSeCase);
+            var useCase = new AtualizarUsuarioUseCase(usuarioRepository.Object, obterUsuarioPorIdUSeCase);
             var dto = new AtualizarUsuarioDto() { Id = 1, Login = "LoginAtualizado", Senha = "SenhaAtualizada" };
             var usuarioEsperado = new Usuario() { Id = dto.Id, Login = dto.Login, Senha = dto.Senha };
 

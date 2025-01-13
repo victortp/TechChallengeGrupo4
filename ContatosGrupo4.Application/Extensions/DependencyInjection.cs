@@ -12,7 +12,7 @@ namespace ContatosGrupo4.Application.Extensions
             services.AddScoped<CriarUsuarioUseCase>();
             services.AddScoped<ObterTodosUsuariosUseCase>();
             services.AddScoped<ObterUsuarioPorIdUseCase>();
-            services.AddScoped<AtualizaUsuarioUseCase>();
+            services.AddScoped<AtualizarUsuarioUseCase>();
             services.AddScoped<ExcluirUsuarioUseCase> ();
 
             return services;

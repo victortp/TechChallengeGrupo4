@@ -13,14 +13,14 @@ namespace ContatosGrupo4.Api.Controllers
         private readonly CriarUsuarioUseCase _criarUsuarioUseCase;
         private readonly ObterTodosUsuariosUseCase _obterTodosUsuariosUseCase;
         private readonly ObterUsuarioPorIdUseCase _obterUsuarioPorIdUseCase;
-        private readonly AtualizaUsuarioUseCase _atualizaUsuarioUseCase;
+        private readonly AtualizarUsuarioUseCase _atualizaUsuarioUseCase;
         private readonly ExcluirUsuarioUseCase _excluirUsuarioUseCase;
 
         public UsuariosController(
             CriarUsuarioUseCase criarUsuarioUseCase,
             ObterTodosUsuariosUseCase obterTodosUsuariosUseCase,
             ObterUsuarioPorIdUseCase obterUsuarioPorIdUseCase,
-            AtualizaUsuarioUseCase atualizaUsuarioUseCase,
+            AtualizarUsuarioUseCase atualizaUsuarioUseCase,
             ExcluirUsuarioUseCase excluirUsuarioUseCase)
         {
             _criarUsuarioUseCase = criarUsuarioUseCase;
