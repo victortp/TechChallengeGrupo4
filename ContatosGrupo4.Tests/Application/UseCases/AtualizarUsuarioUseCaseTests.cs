@@ -26,5 +26,32 @@ namespace ContatosGrupo4.Tests.Application.UseCases
             await act.Should().ThrowAsync<ArgumentException>()
                 .WithMessage("Usuário com ID 1 não encontrado.");
         }
+
+        [Fact]
+        public async Task Deve_Atualizar_E_Retornar_Usuario()
+        {
+            var usuarioRepository = new Mock<IUsuarioRepository>();
+            var obterUsuarioPorIdUSeCase = new ObterUsuarioPorIdUseCase(usuarioRepository.Object);
+            var useCase = new AtualizaUsuarioUseCase(usuarioRepository.Object, obterUsuarioPorIdUSeCase);
+            var dto = new AtualizarUsuarioDto() { Id = 1, Login = "LoginAtualizado", Senha = "SenhaAtualizada" };
+            var usuarioEsperado = new Usuario() { Id = dto.Id, Login = dto.Login, Senha = dto.Senha };
+
+            usuarioRepository
+                .Setup(r => r.ObterPorIdAsync(It.IsAny<int>()))
+                .ReturnsAsync(usuarioEsperado);
+            usuarioRepository
+                .Setup(r => r.AtualizarAsync(It.IsAny<Usuario>()))
+                .Returns(Task.CompletedTask);
+
+            var usuario = await useCase.ExecuteAsync(dto);
+
+            usuario.Id.Should().Be(1);
+            usuario.Login.Should().Be(usuarioEsperado.Login);
+            usuario.Senha.Should().Be(usuarioEsperado.Senha);
+            usuarioRepository.Verify(r => r.AtualizarAsync(It.Is<Usuario>(u =>
+                u.Id == dto.Id &&
+                u.Login == dto.Login &&
+                u.Senha == dto.Senha)), Times.Once);
+        }
     }
 }
