@@ -22,8 +22,8 @@ namespace ContatosGrupo4.Tests.Application.UseCases
             var usuarios = await useCase.ExecuteAsync();
 
             usuarios.Should().HaveCount(1);
-            usuarios.FirstOrDefault()?.Login.Should().Be(usuarioEsperado.Login);
-            usuarios.FirstOrDefault()?.Senha.Should().Be(usuarioEsperado.Senha);
+            usuarios.First().Login.Should().Be(usuarioEsperado.Login);
+            usuarios.First().Senha.Should().Be(usuarioEsperado.Senha);
         }
     }
 }
