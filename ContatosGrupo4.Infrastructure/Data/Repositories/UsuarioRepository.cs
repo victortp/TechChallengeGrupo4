@@ -1,10 +1,12 @@
-﻿using ContatosGrupo4.Domain.Entities;
+﻿using System.Diagnostics.CodeAnalysis;
+using ContatosGrupo4.Domain.Entities;
 using ContatosGrupo4.Domain.Interfaces;
 using ContatosGrupo4.Infrastructure.Data.Contexts;
 using Microsoft.EntityFrameworkCore;
 
 namespace ContatosGrupo4.Infrastructure.Data.Repositories
 {
+    [ExcludeFromCodeCoverage]
     public class UsuarioRepository : IUsuarioRepository
     {
         private readonly AppDbContext _context;
