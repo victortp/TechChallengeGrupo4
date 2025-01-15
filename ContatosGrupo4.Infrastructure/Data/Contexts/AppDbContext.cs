@@ -1,4 +1,5 @@
-﻿using ContatosGrupo4.Application.Configurations;
+﻿using System.Diagnostics.CodeAnalysis;
+using ContatosGrupo4.Application.Configurations;
 using ContatosGrupo4.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
@@ -7,6 +8,7 @@ using Microsoft.Extensions.Options;
 
 namespace ContatosGrupo4.Infrastructure.Data.Contexts
 {
+    [ExcludeFromCodeCoverage]
     public class AppDbContext : DbContext
     {
         private readonly IOptions<DatabaseSettings> _databaseSettings;
@@ -34,6 +36,7 @@ namespace ContatosGrupo4.Infrastructure.Data.Contexts
         }
     }
 
+    [ExcludeFromCodeCoverage]
     public class AppDbContextFactory : IDesignTimeDbContextFactory<AppDbContext>
     {
         public AppDbContext CreateDbContext(string[] args)

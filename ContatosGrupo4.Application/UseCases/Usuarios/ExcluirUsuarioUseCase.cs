@@ -13,14 +13,7 @@ namespace ContatosGrupo4.Application.UseCases.Usuarios
 
         public async Task ExecuteAsync(int id)
         {
-            try
-            {
-                await _usuarioRepository.ExcluirAsync(id);
-            }
-            catch (Exception)
-            {
-                throw;
-            }
+            await _usuarioRepository.ExcluirAsync(id);
         }
     }
 }

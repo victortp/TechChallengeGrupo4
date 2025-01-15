@@ -4,12 +4,12 @@ using ContatosGrupo4.Domain.Interfaces;
 
 namespace ContatosGrupo4.Application.UseCases.Usuarios
 {
-    public class AtualizaUsuarioUseCase
+    public class AtualizarUsuarioUseCase
     {
         private readonly IUsuarioRepository _usuarioRepository;
         private readonly ObterUsuarioPorIdUseCase _obterUsuarioPorIdUseCase;
 
-        public AtualizaUsuarioUseCase(
+        public AtualizarUsuarioUseCase(
             IUsuarioRepository usuarioRepository,
             ObterUsuarioPorIdUseCase obterUsuarioPorIdUseCase)
         {
