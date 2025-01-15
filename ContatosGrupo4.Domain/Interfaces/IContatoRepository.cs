@@ -8,6 +8,8 @@ public interface IContatoRepository
 
     Task<IEnumerable<Contato>> GetContatoPorCodigoArea(int codigoArea);
 
+    Task<Contato?> GetContatoPorNomeEmail(string nome, string email);
+
     Task<Contato?> GetContatoPorId(int idContato);
 
     Task PutContato(Contato contato);

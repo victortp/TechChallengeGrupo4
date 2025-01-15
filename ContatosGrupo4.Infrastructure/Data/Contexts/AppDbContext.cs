@@ -8,7 +8,9 @@ using Microsoft.Extensions.Options;
 
 namespace ContatosGrupo4.Infrastructure.Data.Contexts
 {
+    [ExcludeFromCodeCoverage]
     public class AppDbContext(IOptions<DatabaseSettings> databaseSettings) : DbContext
+
     {
         private readonly IOptions<DatabaseSettings> _databaseSettings = databaseSettings;
 

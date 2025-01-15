@@ -2,6 +2,7 @@
 using ContatosGrupo4.Domain.Interfaces;
 using ContatosGrupo4.Infrastructure.Data.Contexts;
 using Microsoft.EntityFrameworkCore;
+using System.Runtime.CompilerServices;
 
 namespace ContatosGrupo4.Infrastructure.Data.Repositories;
 
@@ -17,6 +18,11 @@ public class ContatoRepository (AppDbContext appDbContext) : IContatoRepository
     public async Task<IEnumerable<Contato>> GetContatoPorCodigoArea(int codigoArea)
     {
         return await _appDbContext.Contato.Where(c => c.CodigoArea == codigoArea).ToListAsync();
+    }
+
+    public async Task<Contato?> GetContatoPorNomeEmail(string nome, string email)
+    {
+        return await _appDbContext.Contato.Where(c => c.Nome == nome && c.Email == email).FirstOrDefaultAsync();
     }
 
     public async Task<Contato?> GetContatoPorId(int idContato)
