@@ -8,15 +8,9 @@ using Microsoft.Extensions.Options;
 
 namespace ContatosGrupo4.Infrastructure.Data.Contexts
 {
-    [ExcludeFromCodeCoverage]
-    public class AppDbContext : DbContext
+    public class AppDbContext(IOptions<DatabaseSettings> databaseSettings) : DbContext
     {
-        private readonly IOptions<DatabaseSettings> _databaseSettings;
-
-        public AppDbContext(IOptions<DatabaseSettings> databaseSettings)
-        {
-            _databaseSettings = databaseSettings;
-        }
+        private readonly IOptions<DatabaseSettings> _databaseSettings = databaseSettings;
 
         public DbSet<Usuario> Usuario { get; set; }
         public DbSet<Contato> Contato { get; set; }

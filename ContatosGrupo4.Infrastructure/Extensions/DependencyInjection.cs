@@ -25,6 +25,7 @@ namespace ContatosGrupo4.InfraStructure.Extensions
             }, ServiceLifetime.Scoped);
 
             services.AddScoped<IUsuarioRepository, UsuarioRepository>();
+            services.AddScoped<IContatoRepository, ContatoRepository>();
 
             return services;
         }
