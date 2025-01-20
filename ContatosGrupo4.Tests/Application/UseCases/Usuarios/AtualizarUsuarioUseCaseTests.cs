@@ -5,7 +5,7 @@ using ContatosGrupo4.Domain.Interfaces;
 using FluentAssertions;
 using Moq;
 
-namespace ContatosGrupo4.Tests.Application.UseCases
+namespace ContatosGrupo4.Tests.Application.UseCases.Usuarios
 {
     public class AtualizarUsuarioUseCaseTests
     {
