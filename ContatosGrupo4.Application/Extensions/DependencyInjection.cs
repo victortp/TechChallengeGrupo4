@@ -21,6 +21,7 @@ namespace ContatosGrupo4.Application.Extensions
             services.AddScoped<ObterContatoPorIdUseCase>();
             services.AddScoped<ObterContatoPorNomeEmailUseCase>();
             services.AddScoped<ObterTodosContatosUseCase>();
+            services.AddScoped<ObterContatosPorDddUseCase>();
 
             return services;
         }

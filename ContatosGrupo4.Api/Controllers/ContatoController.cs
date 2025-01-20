@@ -13,6 +13,7 @@ public class ContatoController(ObterTodosContatosUseCase obterTodosContatosUseCa
                                 , CriarContatoUseCase criarContatoUseCase
                                 , AtualizarContatoUseCase atualizarContatoUseCase
                                 , ExcluirContatoUseCase excluirContatoUseCase
+                                , ObterContatosPorDddUseCase obterContatosPorDddUseCase
                                 , IMemoryCache memoryCache) : ControllerBase
 {
     private readonly ObterTodosContatosUseCase _obterTodosContatosUseCase = obterTodosContatosUseCase;
@@ -20,6 +21,7 @@ public class ContatoController(ObterTodosContatosUseCase obterTodosContatosUseCa
     private readonly CriarContatoUseCase _criarContatoUseCase = criarContatoUseCase;
     private readonly AtualizarContatoUseCase _atualizarContatoUseCase = atualizarContatoUseCase;
     private readonly ExcluirContatoUseCase _excluirContatoUseCase = excluirContatoUseCase;
+    private readonly ObterContatosPorDddUseCase _obterContatosPorDddUseCase = obterContatosPorDddUseCase;
     private readonly IMemoryCache _memoryCache = memoryCache;
 
     [HttpGet]
@@ -43,6 +45,42 @@ public class ContatoController(ObterTodosContatosUseCase obterTodosContatosUseCa
 
         foreach (var contato in contatos)
         {
+            contatoDtos.Add(new ContatoDto
+            {
+                Id = contato.Id,
+                DataCriacao = contato.DataCriacao,
+                DataAtualizacao = contato.DataAtualizacao,
+                Nome = contato.Nome,
+                Telefone = contato.Telefone,
+                Email = contato.Email,
+                UsuarioId = contato.UsuarioId
+            });
+        }
+
+        return Ok(contatoDtos);
+    }
+
+    [HttpGet("ddd/{codigo}")]
+    public async Task<IActionResult> ObterTodosContatosDDD(int codigo)
+    {
+        string cacheKey = $"TodosContatos";
+        List<ContatoDto> contatoDtos = [];
+
+        if (!_memoryCache.TryGetValue(cacheKey, out IEnumerable<Contato>? contatos))
+        {
+            contatos = await _obterContatosPorDddUseCase.ExecuteAsync(codigo);
+            var cacheEntryOptions = new MemoryCacheEntryOptions
+            {
+                AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(5),
+                SlidingExpiration = TimeSpan.FromMinutes(2)
+            };
+        }
+
+        if (contatos is null) return Ok();
+
+        foreach (var contato in contatos)
+        {
+            if (!contato.Telefone.StartsWith(codigo.ToString())) continue;
             contatoDtos.Add(new ContatoDto
             {
                 Id = contato.Id,
