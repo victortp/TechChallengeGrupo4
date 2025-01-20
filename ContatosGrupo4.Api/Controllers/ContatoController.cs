@@ -99,35 +99,46 @@ public class ContatoController(ObterTodosContatosUseCase obterTodosContatosUseCa
     [HttpGet("{idContato}")]
     public async Task<IActionResult> ObterContatoPorId(int idContato)
     {
-        var cacheKey = $"Contato_{idContato}";
-
-        if (!_memoryCache.TryGetValue(cacheKey, out Contato? contato))
+        try
         {
-            contato = await _obterContatoPorIdUseCase.ExecuteAsync(idContato);
+            var cacheKey = $"Contato_{idContato}";
 
-            if (contato == null) return NotFound($"Contato {idContato} não encontrado");
-
-            var cacheEntryOptions = new MemoryCacheEntryOptions
+            if (!_memoryCache.TryGetValue(cacheKey, out Contato? contato))
             {
-                AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(10)
+                contato = await _obterContatoPorIdUseCase.ExecuteAsync(idContato);
+
+                if (contato == null) return NotFound($"Contato {idContato} não encontrado");
+
+                var cacheEntryOptions = new MemoryCacheEntryOptions
+                {
+                    AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(10)
+                };
+                _memoryCache.Set(cacheKey, contato, cacheEntryOptions);
+            }
+
+            if (contato is null) return NotFound($"Contato {idContato} não encontrado");
+
+            var contatoDto = new ContatoDto
+            {
+                Id = contato.Id,
+                DataCriacao = contato.DataCriacao,
+                DataAtualizacao = contato.DataAtualizacao,
+                Nome = contato.Nome,
+                Telefone = contato.Telefone,
+                Email = contato.Email,
+                UsuarioId = contato.UsuarioId
             };
-            _memoryCache.Set(cacheKey, contato, cacheEntryOptions);
+
+            return Ok(contatoDto);
         }
-
-        if (contato is null) return NotFound($"Contato {idContato} não encontrado");
-
-        var contatoDto = new ContatoDto
+        catch (ArgumentException ex)
         {
-            Id = contato.Id,
-            DataCriacao = contato.DataCriacao,
-            DataAtualizacao = contato.DataAtualizacao,
-            Nome = contato.Nome,
-            Telefone = contato.Telefone,
-            Email = contato.Email,
-            UsuarioId = contato.UsuarioId
-        };
-
-        return Ok(contatoDto);
+            return NotFound(ex.Message);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, $"Erro interno: {ex.Message}");
+        }
     }
 
     [HttpPost]
