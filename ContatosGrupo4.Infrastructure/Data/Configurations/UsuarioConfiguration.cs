@@ -31,7 +31,7 @@ namespace ContatosGrupo4.Infrastructure.Data.Configurations
                 .IsRequired();
             builder.HasMany(u => u.Contato)
                 .WithOne(c => c.Usuario)
-                .HasForeignKey(c => c.Id)
+                .HasForeignKey(c => c.UsuarioId)
                 .OnDelete(DeleteBehavior.ClientNoAction);
         }
     }

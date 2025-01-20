@@ -5,7 +5,7 @@ using ContatosGrupo4.Domain.Interfaces;
 using FluentAssertions;
 using Moq;
 
-namespace ContatosGrupo4.Tests.Application.UseCases.ContatoTests;
+namespace ContatosGrupo4.Tests.Application.UseCases.Contatos;
 
 public class ObterContatoPorIdUseCaseTests
 {
@@ -14,9 +14,9 @@ public class ObterContatoPorIdUseCaseTests
     {
         var contatoRepository = new Mock<IContatoRepository>();
         var contatoUseCase = new ObterContatoPorIdUseCase(contatoRepository.Object);
-        var contatoEsperado = new Contato() { Id = 1, Nome = "testeContato", Email = "testeemail@google.com", CodigoArea = 32, Telefone = "99999-9999" };
+        var contatoEsperado = new Contato() { Id = 1, Nome = "testeContato", Email = "testeemail@google.com", Telefone = "99999-9999" };
 
-        contatoRepository.Setup(r => r.GetContatoPorId(It.IsAny<int>())).ReturnsAsync(contatoEsperado);
+        contatoRepository.Setup(r => r.ObterPorIdAsync(It.IsAny<int>())).ReturnsAsync(contatoEsperado);
 
         var contato = await contatoUseCase.ExecuteAsync(1);
 
@@ -24,7 +24,6 @@ public class ObterContatoPorIdUseCaseTests
         contato!.Id.Should().Be(1);
         contato!.Nome.Should().Be(contatoEsperado.Nome);
         contato!.Email.Should().Be(contatoEsperado.Email);
-        contato!.CodigoArea.Should().Be(contatoEsperado.CodigoArea);
         contato!.Telefone.Should().Be(contatoEsperado.Telefone);
     }
 
@@ -34,7 +33,7 @@ public class ObterContatoPorIdUseCaseTests
         var contatoRepository = new Mock<IContatoRepository>();
         var contatoUseCase = new ObterContatoPorIdUseCase(contatoRepository.Object);
 
-        contatoRepository.Setup(r => r.GetContatoPorId(It.IsAny<int>())).ReturnsAsync(default(Contato));
+        contatoRepository.Setup(r => r.ObterPorIdAsync(It.IsAny<int>())).ReturnsAsync(default(Contato));
 
         var act = async () => await contatoUseCase.ExecuteAsync(1);
 

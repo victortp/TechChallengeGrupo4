@@ -9,7 +9,7 @@ namespace ContatosGrupo4.Application.UseCases.Contatos
 
         public async Task<Contato?> ExecuteAsync(string nome, string email)
         {
-            var contato = await _contatoRepository.GetContatoPorNomeEmail(nome, email);
+            var contato = await _contatoRepository.ObterPorNomeEmailAsync(nome, email);
             return contato;
         }
     }

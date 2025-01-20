@@ -1,50 +1,51 @@
-﻿using ContatosGrupo4.Domain.Entities;
+﻿using System.Diagnostics.CodeAnalysis;
+using ContatosGrupo4.Domain.Entities;
 using ContatosGrupo4.Domain.Interfaces;
 using ContatosGrupo4.Infrastructure.Data.Contexts;
 using Microsoft.EntityFrameworkCore;
-using System.Runtime.CompilerServices;
 
 namespace ContatosGrupo4.Infrastructure.Data.Repositories;
 
+[ExcludeFromCodeCoverage]
 public class ContatoRepository (AppDbContext appDbContext) : IContatoRepository
 {
     readonly AppDbContext _appDbContext = appDbContext;
 
-    public async Task<IEnumerable<Contato>> GetAllContatos()
+    public async Task<IEnumerable<Contato>> ObterTodosAsync()
     {
         return await _appDbContext.Contato.ToListAsync();
     }
 
-    public async Task<IEnumerable<Contato>> GetContatoPorCodigoArea(int codigoArea)
+    public async Task<IEnumerable<Contato>> ObterPorDddsAsync(int codigoArea)
     {
-        return await _appDbContext.Contato.Where(c => c.CodigoArea == codigoArea).ToListAsync();
+        return await _appDbContext.Contato.Where(c => EF.Functions.Like(c.Telefone, $"{codigoArea}%")).ToListAsync();
     }
 
-    public async Task<Contato?> GetContatoPorNomeEmail(string nome, string email)
+    public async Task<Contato?> ObterPorNomeEmailAsync(string nome, string email)
     {
-        return await _appDbContext.Contato.Where(c => c.Nome == nome && c.Email == email).FirstOrDefaultAsync();
+        return await _appDbContext.Contato.Where(c => c.Nome == nome || c.Email == email).FirstOrDefaultAsync();
     }
 
-    public async Task<Contato?> GetContatoPorId(int idContato)
+    public async Task<Contato?> ObterPorIdAsync(int idContato)
     {
         return await _appDbContext.Contato.FindAsync(idContato);
     }
 
-    public async Task PostContatos(Contato contato)
+    public async Task AdicionarAsync(Contato contato)
     {
         await _appDbContext.AddAsync(contato);
         await _appDbContext.SaveChangesAsync();
     }
 
-    public async Task PutContato(Contato contato)
+    public async Task AtualizarAsync(Contato contato)
     {
         _appDbContext.Contato.Update(contato);
         await _appDbContext.SaveChangesAsync();
     }
 
-    public async Task DeleteContatos(int idContato)
+    public async Task ExcluirAsync(int idContato)
     {
-        var contato = await this.GetContatoPorId(idContato);
+        var contato = await this.ObterPorIdAsync(idContato);
 
         if (contato != null)
         {

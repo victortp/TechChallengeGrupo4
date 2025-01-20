@@ -9,7 +9,7 @@ public class ObterContatoPorIdUseCase (IContatoRepository contatoRepository)
 
     public async Task<Contato?> ExecuteAsync(int idContato)
     {
-        var contato = await _contatoRepository.GetContatoPorId(idContato);
+        var contato = await _contatoRepository.ObterPorIdAsync(idContato);
         return contato ?? throw new ArgumentException($"Contato com ID {idContato} não encontrado.");
     }
 }

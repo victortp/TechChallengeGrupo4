@@ -30,6 +30,10 @@ namespace ContatosGrupo4.Infrastructure.Data.Configurations
             builder.Property(c => c.Email)
                    .HasColumnType("varchar(200)")
                    .IsRequired();
+            builder.HasOne(c => c.Usuario)
+                .WithMany(u => u.Contato)
+                .HasForeignKey(c => c.UsuarioId)
+                .OnDelete(DeleteBehavior.ClientNoAction);
         }
     }
 }

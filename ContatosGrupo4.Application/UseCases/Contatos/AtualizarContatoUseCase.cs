@@ -18,10 +18,9 @@ public class AtualizarContatoUseCase (IContatoRepository contatoRepository, Obte
             contato!.Nome = atualizarContato.Nome;
             contato.Telefone = atualizarContato.Telefone;
             contato.Email = atualizarContato.Email;
-            contato.CodigoArea = atualizarContato.CodigoArea;
             contato.SetDataAtualizacao();
 
-            await _contatoRepository.PutContato(contato);
+            await _contatoRepository.AtualizarAsync(contato);
             return contato;
         }
         catch (Exception)

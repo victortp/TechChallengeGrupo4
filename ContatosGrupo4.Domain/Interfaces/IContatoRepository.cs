@@ -4,17 +4,17 @@ namespace ContatosGrupo4.Domain.Interfaces;
 
 public interface IContatoRepository
 {
-    Task<IEnumerable<Contato>> GetAllContatos();
+    Task<IEnumerable<Contato>> ObterTodosAsync();
 
-    Task<IEnumerable<Contato>> GetContatoPorCodigoArea(int codigoArea);
+    Task<IEnumerable<Contato>> ObterPorDddsAsync(int codigoArea);
 
-    Task<Contato?> GetContatoPorNomeEmail(string nome, string email);
+    Task<Contato?> ObterPorNomeEmailAsync(string nome, string email);
 
-    Task<Contato?> GetContatoPorId(int idContato);
+    Task<Contato?> ObterPorIdAsync(int idContato);
 
-    Task PutContato(Contato contato);
+    Task AtualizarAsync(Contato contato);
 
-    Task PostContatos(Contato contato);
+    Task AdicionarAsync(Contato contato);
 
-    Task DeleteContatos(int idContato);
+    Task ExcluirAsync(int idContato);
 }

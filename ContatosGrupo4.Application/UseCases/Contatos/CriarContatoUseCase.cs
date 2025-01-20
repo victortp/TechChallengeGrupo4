@@ -1,34 +1,40 @@
 ﻿using ContatosGrupo4.Application.DTOs;
+using ContatosGrupo4.Application.UseCases.Usuarios;
+using ContatosGrupo4.Application.Validations;
 using ContatosGrupo4.Domain.Entities;
 using ContatosGrupo4.Domain.Interfaces;
 
 namespace ContatosGrupo4.Application.UseCases.Contatos;
 
-public class CriarContatoUseCase (IContatoRepository contatoRepository, ObterContatoPorNomeEmailUseCase obterContatoPorNomeEmail)
+public class CriarContatoUseCase (
+    IContatoRepository contatoRepository,
+    ObterContatoPorNomeEmailUseCase obterContatoPorNomeEmail,
+    ObterUsuarioPorIdUseCase obterUsuarioPorIdUseCase)
 {
     private readonly IContatoRepository _contatoRepository = contatoRepository;
     private readonly ObterContatoPorNomeEmailUseCase _obterContatoPorNomeEmail = obterContatoPorNomeEmail;
+    private readonly ObterUsuarioPorIdUseCase _obterUsuarioPorIdUse = obterUsuarioPorIdUseCase;
     public async Task<Contato> ExecuteAsync (CriarContatoDto contatoDto)
     {
         try
         {
+
             if (string.IsNullOrEmpty(contatoDto.Nome))
             {
                 throw new ArgumentNullException("O Nome não pode ser vazio.", nameof(contatoDto.Nome));
             }
-            else if (string.IsNullOrEmpty(contatoDto.Telefone))
+
+            if (!ContatoValidator.ValidarTelefone(contatoDto.Telefone))
             {
-                throw new ArgumentNullException("O Telefone não pode ser vazio.", nameof(contatoDto.Telefone));
-            }
-            else if (string.IsNullOrEmpty(contatoDto.Email))
-            {
-                throw new ArgumentNullException("O E-mail não pode ser vazio", nameof(contatoDto.Email));
-            }
-            else if (contatoDto.CodigoArea == 0)
-            {
-                throw new ArgumentNullException("O Código da Área deve ser informado.", nameof(contatoDto.CodigoArea));
+                throw new ArgumentNullException("Telefone não informado ou inválido.", nameof(contatoDto.Telefone));
             }
 
+            if (!ContatoValidator.ValidarEmail(contatoDto.Email))
+            {
+                throw new ArgumentNullException("E-mail não informado ou inválido.", nameof(contatoDto.Email));
+            }
+
+            var usuario = await _obterUsuarioPorIdUse.ExecuteAsync(contatoDto.UsuarioId);
             var contatoExistente = await _obterContatoPorNomeEmail.ExecuteAsync(contatoDto.Nome, contatoDto.Email);
             if (contatoExistente != null)
             {
@@ -40,11 +46,12 @@ public class CriarContatoUseCase (IContatoRepository contatoRepository, ObterCon
                 Nome = contatoDto.Nome,
                 Telefone = contatoDto.Telefone,
                 Email = contatoDto.Email,
-                CodigoArea = contatoDto.CodigoArea
+                UsuarioId = contatoDto.UsuarioId
             };
             contato.SetDataCriacao();
 
-            await _contatoRepository.PostContatos(contato);
+            await _contatoRepository.AdicionarAsync(contato);
+
             return contato;
         }
         catch (Exception ex)

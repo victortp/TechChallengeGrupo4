@@ -8,6 +8,6 @@ public class ExcluirContatoUseCase (IContatoRepository contatoRepository)
 
     public async Task ExecuteAsync (int idContato)
     {
-        await _contatoRepository.DeleteContatos(idContato);
+        await _contatoRepository.ExcluirAsync(idContato);
     }
 }
