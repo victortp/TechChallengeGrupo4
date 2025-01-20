@@ -1,9 +1,6 @@
 ﻿using ContatosGrupo4.Application.DTOs;
 using ContatosGrupo4.Application.UseCases.Usuarios;
-using ContatosGrupo4.Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Caching.Memory;
-using Microsoft.IdentityModel.Tokens;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -18,41 +15,25 @@ namespace ContatosGrupo4.Api.Controllers
         private readonly ObterUsuarioPorIdUseCase _obterUsuarioPorIdUseCase;
         private readonly AtualizarUsuarioUseCase _atualizaUsuarioUseCase;
         private readonly ExcluirUsuarioUseCase _excluirUsuarioUseCase;
-        private readonly IMemoryCache _memoryCache;
 
         public UsuariosController(
             CriarUsuarioUseCase criarUsuarioUseCase,
             ObterTodosUsuariosUseCase obterTodosUsuariosUseCase,
             ObterUsuarioPorIdUseCase obterUsuarioPorIdUseCase,
             AtualizarUsuarioUseCase atualizaUsuarioUseCase,
-            ExcluirUsuarioUseCase excluirUsuarioUseCase,
-            IMemoryCache memoryCache)
+            ExcluirUsuarioUseCase excluirUsuarioUseCase)
         {
             _criarUsuarioUseCase = criarUsuarioUseCase;
             _obterTodosUsuariosUseCase = obterTodosUsuariosUseCase;
             _obterUsuarioPorIdUseCase = obterUsuarioPorIdUseCase;
             _atualizaUsuarioUseCase = atualizaUsuarioUseCase;
             _excluirUsuarioUseCase = excluirUsuarioUseCase;
-            _memoryCache = memoryCache;
         }
 
         [HttpGet]
         public async Task<IActionResult> ObterTodosUsuarios()
         {
-            const string cacheKey = "TodosUsuarios";
-
-            if (!_memoryCache.TryGetValue(cacheKey, out var usuarios))
-            {
-                usuarios = await _obterTodosUsuariosUseCase.ExecuteAsync();
-
-                var cacheEntryOptions = new MemoryCacheEntryOptions
-                {
-                    AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(5),
-                    SlidingExpiration = TimeSpan.FromMinutes(2)
-                };
-                _memoryCache.Set(cacheKey, usuarios, cacheEntryOptions);
-            }
-
+            var usuarios = await _obterTodosUsuariosUseCase.ExecuteAsync();
             return Ok(usuarios);
         }
 
@@ -61,20 +42,7 @@ namespace ContatosGrupo4.Api.Controllers
         {
             try
             {
-                var cacheKey = $"Usuario_{id}";
-
-                if (!_memoryCache.TryGetValue(cacheKey, out var usuario))
-                {
-                    usuario = await _obterUsuarioPorIdUseCase.ExecuteAsync(id);
-                    if (usuario == null) return NotFound("Usuário não encontrado");
-
-                    var cacheEntryOptions = new MemoryCacheEntryOptions
-                    {
-                        AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(10)
-                    };
-
-                    _memoryCache.Set(cacheKey, usuario, cacheEntryOptions);
-                }
+                var usuario = await _obterUsuarioPorIdUseCase.ExecuteAsync(id);
                 return Ok(usuario);
             }
             catch (ArgumentException ex)
@@ -98,7 +66,6 @@ namespace ContatosGrupo4.Api.Controllers
             try
             {
                 var usuario = await _criarUsuarioUseCase.ExecuteAsync(usuarioCriarDto);
-                _memoryCache.Remove("TodosUsuarios");
                 return CreatedAtAction(nameof(CriarUsuario), new { id = usuario.Id }, usuario);
             }
             catch (ArgumentException ex)
@@ -126,8 +93,6 @@ namespace ContatosGrupo4.Api.Controllers
             try
             {
                 var usuario = await _atualizaUsuarioUseCase.ExecuteAsync(usuarioAtualizarDto);
-                _memoryCache.Remove("TodosUsuarios");
-                _memoryCache.Remove($"Usuario_{id}");
                 return Ok(usuario);
             }
             catch (ArgumentException ex)
@@ -146,8 +111,6 @@ namespace ContatosGrupo4.Api.Controllers
             try
             {
                 await _excluirUsuarioUseCase.ExecuteAsync(id);
-                _memoryCache.Remove("TodosUsuarios");
-                _memoryCache.Remove($"Usuario_{id}");
                 return NoContent();
             }
             catch (ArgumentException ex)
