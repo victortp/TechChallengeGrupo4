@@ -1,5 +1,6 @@
 ﻿using ContatosGrupo4.Application.DTOs;
 using ContatosGrupo4.Application.UseCases.Contatos;
+using ContatosGrupo4.Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
 
@@ -24,9 +25,10 @@ public class ContatoController(ObterTodosContatosUseCase obterTodosContatosUseCa
     [HttpGet]
     public async Task<IActionResult> ObterTodosContatos()
     {
-        const string cacheKey = "TodosContratos";
+        const string cacheKey = "TodosContatos";
+        List<ContatoDto> contatoDtos = [];
 
-        if (!_memoryCache.TryGetValue(cacheKey, out var contatos))
+        if (!_memoryCache.TryGetValue(cacheKey, out IEnumerable<Contato>? contatos))
         {
             contatos = await _obterTodosContatosUseCase.ExecuteAsync();
             var cacheEntryOptions = new MemoryCacheEntryOptions
@@ -36,7 +38,24 @@ public class ContatoController(ObterTodosContatosUseCase obterTodosContatosUseCa
             };
             _memoryCache.Set(cacheKey, contatos, cacheEntryOptions);
         }
-        return Ok(contatos);
+
+        if (contatos is null) return Ok();
+
+        foreach (var contato in contatos)
+        {
+            contatoDtos.Add(new ContatoDto
+            {
+                Id = contato.Id,
+                DataCriacao = contato.DataCriacao,
+                DataAtualizacao = contato.DataAtualizacao,
+                Nome = contato.Nome,
+                Telefone = contato.Telefone,
+                Email = contato.Email,
+                UsuarioId = contato.UsuarioId
+            });
+        }
+
+        return Ok(contatoDtos);
     }
 
     [HttpGet("{idContato}")]
@@ -44,7 +63,7 @@ public class ContatoController(ObterTodosContatosUseCase obterTodosContatosUseCa
     {
         var cacheKey = $"Contato_{idContato}";
 
-        if (!_memoryCache.TryGetValue(cacheKey, out var contato))
+        if (!_memoryCache.TryGetValue(cacheKey, out Contato? contato))
         {
             contato = await _obterContatoPorIdUseCase.ExecuteAsync(idContato);
 
@@ -56,7 +75,21 @@ public class ContatoController(ObterTodosContatosUseCase obterTodosContatosUseCa
             };
             _memoryCache.Set(cacheKey, contato, cacheEntryOptions);
         }
-        return Ok(contato);
+
+        if (contato is null) return NotFound($"Contato {idContato} não encontrado");
+
+        var contatoDto = new ContatoDto
+        {
+            Id = contato.Id,
+            DataCriacao = contato.DataCriacao,
+            DataAtualizacao = contato.DataAtualizacao,
+            Nome = contato.Nome,
+            Telefone = contato.Telefone,
+            Email = contato.Email,
+            UsuarioId = contato.UsuarioId
+        };
+
+        return Ok(contatoDto);
     }
 
     [HttpPost]
@@ -66,8 +99,20 @@ public class ContatoController(ObterTodosContatosUseCase obterTodosContatosUseCa
         {
             if (contatoCriarDto == null) return BadRequest("Dados inválidos");
             var contato = await _criarContatoUseCase.ExecuteAsync(contatoCriarDto);
-            _memoryCache.Remove("TodosContratos");
-            return CreatedAtAction(nameof(CriarContato), new { id = contato.Id }, contato);
+            _memoryCache.Remove("TodosContatos");
+
+            var contatoDto = new ContatoDto
+            {
+                Id = contato.Id,
+                DataCriacao = contato.DataCriacao,
+                DataAtualizacao = contato.DataAtualizacao,
+                Nome = contato.Nome,
+                Telefone = contato.Telefone,
+                Email = contato.Email,
+                UsuarioId = contato.UsuarioId
+            };
+
+            return CreatedAtAction(nameof(CriarContato), new { id = contato.Id }, contatoDto);
         }
         catch (ArgumentException ex)
         {
@@ -90,9 +135,21 @@ public class ContatoController(ObterTodosContatosUseCase obterTodosContatosUseCa
         {
             if (contatoAtualizarDto == null || idContato != contatoAtualizarDto.Id) return BadRequest("Dados inválidos");
             var contato = await _atualizarContatoUseCase.ExecuteAsync(contatoAtualizarDto);
-            _memoryCache.Remove("TodosContratos");
+            _memoryCache.Remove("TodosContatos");
             _memoryCache.Remove($"Contato_{idContato}");
-            return Ok(contato);
+
+            var contatoDto = new ContatoDto
+            {
+                Id = contato.Id,
+                DataCriacao = contato.DataCriacao,
+                DataAtualizacao = contato.DataAtualizacao,
+                Nome = contato.Nome,
+                Telefone = contato.Telefone,
+                Email = contato.Email,
+                UsuarioId = contato.UsuarioId
+            };
+
+            return Ok(contatoDto);
         }
         catch (ArgumentException ex)
         {
@@ -110,7 +167,7 @@ public class ContatoController(ObterTodosContatosUseCase obterTodosContatosUseCa
         try
         {
             await _excluirContatoUseCase.ExecuteAsync(idContato);
-            _memoryCache.Remove("TodosContratos");
+            _memoryCache.Remove("TodosContatos");
             _memoryCache.Remove($"Contato_{idContato}");
             return NoContent();
         }
