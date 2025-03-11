@@ -1,9 +1,11 @@
-﻿using ContatosGrupo4.Domain.Entities;
+﻿using System.Diagnostics.CodeAnalysis;
+using ContatosGrupo4.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace ContatosGrupo4.Infrastructure.Data.Configurations
 {
+    [ExcludeFromCodeCoverage]
     public class ContatoConfiguration : IEntityTypeConfiguration<Contato>
     {
         public void Configure(EntityTypeBuilder<Contato> builder)
@@ -28,6 +30,10 @@ namespace ContatosGrupo4.Infrastructure.Data.Configurations
             builder.Property(c => c.Email)
                    .HasColumnType("varchar(200)")
                    .IsRequired();
+            builder.HasOne(c => c.Usuario)
+                .WithMany(u => u.Contato)
+                .HasForeignKey(c => c.UsuarioId)
+                .OnDelete(DeleteBehavior.ClientNoAction);
         }
     }
 }

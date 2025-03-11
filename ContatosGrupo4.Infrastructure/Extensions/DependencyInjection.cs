@@ -1,4 +1,5 @@
-﻿using ContatosGrupo4.Application.Configurations;
+﻿using System.Diagnostics.CodeAnalysis;
+using ContatosGrupo4.Application.Configurations;
 using ContatosGrupo4.Domain.Interfaces;
 using ContatosGrupo4.Infrastructure.Data.Contexts;
 using ContatosGrupo4.Infrastructure.Data.Repositories;
@@ -8,6 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace ContatosGrupo4.InfraStructure.Extensions
 {
+    [ExcludeFromCodeCoverage]
     public static class DependencyInjection
     {
         public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
@@ -19,10 +21,13 @@ namespace ContatosGrupo4.InfraStructure.Extensions
 
             services.AddDbContext<AppDbContext>(c =>
             {
+                c.UseLazyLoadingProxies();
                 c.UseSqlServer(configuration.GetValue<string>("SqlServer:ConnectionString"));
             }, ServiceLifetime.Scoped);
 
             services.AddScoped<IUsuarioRepository, UsuarioRepository>();
+            services.AddScoped<IContatoRepository, ContatoRepository>();
+            services.AddMemoryCache();
 
             return services;
         }

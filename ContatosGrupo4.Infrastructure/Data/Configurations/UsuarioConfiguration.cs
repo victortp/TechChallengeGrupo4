@@ -1,9 +1,11 @@
-﻿using ContatosGrupo4.Domain.Entities;
+﻿using System.Diagnostics.CodeAnalysis;
+using ContatosGrupo4.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace ContatosGrupo4.Infrastructure.Data.Configurations
 {
+    [ExcludeFromCodeCoverage]
     public class UsuarioConfiguration : IEntityTypeConfiguration<Usuario>
     {
         public void Configure(EntityTypeBuilder<Usuario> builder)
@@ -29,7 +31,7 @@ namespace ContatosGrupo4.Infrastructure.Data.Configurations
                 .IsRequired();
             builder.HasMany(u => u.Contato)
                 .WithOne(c => c.Usuario)
-                .HasForeignKey(c => c.Id)
+                .HasForeignKey(c => c.UsuarioId)
                 .OnDelete(DeleteBehavior.ClientNoAction);
         }
     }
