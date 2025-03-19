@@ -13,8 +13,6 @@ namespace ContatosGrupo4.Infrastructure.Data.Contexts
 
     {
         private readonly IOptions<DatabaseSettings> _databaseSettings = databaseSettings;
-
-        public DbSet<Usuario> Usuario { get; set; }
         public DbSet<Contato> Contato { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

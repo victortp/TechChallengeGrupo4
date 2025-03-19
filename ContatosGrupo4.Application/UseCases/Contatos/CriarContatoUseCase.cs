@@ -1,5 +1,4 @@
 ﻿using ContatosGrupo4.Application.DTOs;
-using ContatosGrupo4.Application.UseCases.Usuarios;
 using ContatosGrupo4.Application.Validations;
 using ContatosGrupo4.Domain.Entities;
 using ContatosGrupo4.Domain.Interfaces;
@@ -8,12 +7,10 @@ namespace ContatosGrupo4.Application.UseCases.Contatos;
 
 public class CriarContatoUseCase (
     IContatoRepository contatoRepository,
-    ObterContatoPorNomeEmailUseCase obterContatoPorNomeEmail,
-    ObterUsuarioPorIdUseCase obterUsuarioPorIdUseCase)
+    ObterContatoPorNomeEmailUseCase obterContatoPorNomeEmail)
 {
     private readonly IContatoRepository _contatoRepository = contatoRepository;
     private readonly ObterContatoPorNomeEmailUseCase _obterContatoPorNomeEmail = obterContatoPorNomeEmail;
-    private readonly ObterUsuarioPorIdUseCase _obterUsuarioPorIdUse = obterUsuarioPorIdUseCase;
     public async Task<Contato> ExecuteAsync (CriarContatoDto contatoDto)
     {
         try
@@ -34,7 +31,6 @@ public class CriarContatoUseCase (
                 throw new ArgumentNullException("E-mail não informado ou inválido.", nameof(contatoDto.Email));
             }
 
-            var usuario = await _obterUsuarioPorIdUse.ExecuteAsync(contatoDto.UsuarioId);
             var contatoExistente = await _obterContatoPorNomeEmail.ExecuteAsync(contatoDto.Nome, contatoDto.Email);
             if (contatoExistente != null)
             {
@@ -45,8 +41,7 @@ public class CriarContatoUseCase (
             {
                 Nome = contatoDto.Nome,
                 Telefone = contatoDto.Telefone,
-                Email = contatoDto.Email,
-                UsuarioId = contatoDto.UsuarioId
+                Email = contatoDto.Email
             };
             contato.SetDataCriacao();
 

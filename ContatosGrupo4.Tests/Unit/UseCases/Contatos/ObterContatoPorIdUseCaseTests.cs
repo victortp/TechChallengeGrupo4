@@ -1,11 +1,10 @@
 ﻿using ContatosGrupo4.Application.UseCases.Contatos;
-using ContatosGrupo4.Application.UseCases.Usuarios;
 using ContatosGrupo4.Domain.Entities;
 using ContatosGrupo4.Domain.Interfaces;
 using FluentAssertions;
 using Moq;
 
-namespace ContatosGrupo4.Tests.Application.UseCases.Contatos;
+namespace ContatosGrupo4.Tests.Unit.UseCases.Contatos;
 
 public class ObterContatoPorIdUseCaseTests
 {

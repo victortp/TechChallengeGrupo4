@@ -52,8 +52,7 @@ public class ContatoController(ObterTodosContatosUseCase obterTodosContatosUseCa
                 DataAtualizacao = contato.DataAtualizacao,
                 Nome = contato.Nome,
                 Telefone = contato.Telefone,
-                Email = contato.Email,
-                UsuarioId = contato.UsuarioId
+                Email = contato.Email
             });
         }
 
@@ -88,8 +87,7 @@ public class ContatoController(ObterTodosContatosUseCase obterTodosContatosUseCa
                 DataAtualizacao = contato.DataAtualizacao,
                 Nome = contato.Nome,
                 Telefone = contato.Telefone,
-                Email = contato.Email,
-                UsuarioId = contato.UsuarioId
+                Email = contato.Email
             });
         }
 
@@ -125,8 +123,7 @@ public class ContatoController(ObterTodosContatosUseCase obterTodosContatosUseCa
                 DataAtualizacao = contato.DataAtualizacao,
                 Nome = contato.Nome,
                 Telefone = contato.Telefone,
-                Email = contato.Email,
-                UsuarioId = contato.UsuarioId
+                Email = contato.Email
             };
 
             return Ok(contatoDto);
@@ -157,8 +154,7 @@ public class ContatoController(ObterTodosContatosUseCase obterTodosContatosUseCa
                 DataAtualizacao = contato.DataAtualizacao,
                 Nome = contato.Nome,
                 Telefone = contato.Telefone,
-                Email = contato.Email,
-                UsuarioId = contato.UsuarioId
+                Email = contato.Email
             };
 
             return CreatedAtAction(nameof(CriarContato), new { id = contato.Id }, contatoDto);
@@ -194,8 +190,7 @@ public class ContatoController(ObterTodosContatosUseCase obterTodosContatosUseCa
                 DataAtualizacao = contato.DataAtualizacao,
                 Nome = contato.Nome,
                 Telefone = contato.Telefone,
-                Email = contato.Email,
-                UsuarioId = contato.UsuarioId
+                Email = contato.Email
             };
 
             return Ok(contatoDto);

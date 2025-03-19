@@ -3,7 +3,7 @@ using ContatosGrupo4.Domain.Entities;
 using ContatosGrupo4.Domain.Interfaces;
 using Moq;
 
-namespace ContatosGrupo4.Tests.Application.UseCases.Contatos;
+namespace ContatosGrupo4.Tests.Unit.UseCases.Contatos;
 
 public class ExcluirContatoUseCaseTests
 {

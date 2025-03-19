@@ -25,7 +25,6 @@ namespace ContatosGrupo4.InfraStructure.Extensions
                 c.UseSqlServer(configuration.GetValue<string>("SqlServer:ConnectionString"));
             }, ServiceLifetime.Scoped);
 
-            services.AddScoped<IUsuarioRepository, UsuarioRepository>();
             services.AddScoped<IContatoRepository, ContatoRepository>();
             services.AddMemoryCache();
 
