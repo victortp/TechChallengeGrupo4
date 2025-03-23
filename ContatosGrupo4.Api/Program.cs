@@ -1,3 +1,4 @@
+using ContatosGrupo4.Api.Extensions;
 using ContatosGrupo4.Application.Extensions;
 using ContatosGrupo4.InfraStructure.Extensions;
 
@@ -13,6 +14,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddInfrastructure(builder.Configuration);
 builder.Services.AddUseCases();
+builder.Services.AddPrometheus();
 
 var app = builder.Build();
 
@@ -23,9 +25,12 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
+app.UseRouting();
+app.UsePrometheus();
 
 app.UseAuthorization();
+
+app.UseHttpsRedirection();
 
 app.MapControllers();
 
