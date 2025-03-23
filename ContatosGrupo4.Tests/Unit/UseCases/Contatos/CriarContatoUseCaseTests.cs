@@ -1,12 +1,11 @@
 ﻿using ContatosGrupo4.Application.DTOs;
 using ContatosGrupo4.Application.UseCases.Contatos;
-using ContatosGrupo4.Domain.Interfaces;
 using ContatosGrupo4.Domain.Entities;
-using Moq;
+using ContatosGrupo4.Domain.Interfaces;
 using FluentAssertions;
-using ContatosGrupo4.Application.UseCases.Usuarios;
+using Moq;
 
-namespace ContatosGrupo4.Tests.Application.UseCases.Contatos;
+namespace ContatosGrupo4.Tests.Unit.UseCases.Contatos;
 
 public class CriarContatoUseCaseTests
 {
@@ -14,30 +13,23 @@ public class CriarContatoUseCaseTests
     public static async Task DeveCriarContatoQuandoDtoForValido()
     {
         var contatoRepository = new Mock<IContatoRepository>();
-        var usuarioRepository = new Mock<IUsuarioRepository>();
         var obterContatoPorNomeEmail = new ObterContatoPorNomeEmailUseCase(contatoRepository.Object);
-        var obterUsuarioPorIdUseCase = new ObterUsuarioPorIdUseCase(usuarioRepository.Object);
-        var contatoUseCase = new CriarContatoUseCase(contatoRepository.Object, obterContatoPorNomeEmail, obterUsuarioPorIdUseCase);
-        var dto = new CriarContatoDto() { Nome = "testeContato", Email = "testeemail@google.com", Telefone = "3299999-9999", UsuarioId = 1 };
-        var contatoEsperado = new Contato { Nome = dto.Nome, Email = dto.Email, Telefone = dto.Telefone, UsuarioId = dto.UsuarioId };
+        var contatoUseCase = new CriarContatoUseCase(contatoRepository.Object, obterContatoPorNomeEmail);
+        var dto = new CriarContatoDto() { Nome = "testeContato", Email = "testeemail@google.com", Telefone = "3299999-9999" };
+        var contatoEsperado = new Contato { Nome = dto.Nome, Email = dto.Email, Telefone = dto.Telefone };
         contatoRepository
             .Setup(r => r.AdicionarAsync(It.IsAny<Contato>()))
             .Returns(Task.CompletedTask);
-        usuarioRepository
-            .Setup(r => r.ObterPorIdAsync(It.IsAny<int>()))
-            .ReturnsAsync(new Usuario() { });
         
         var contatoCriado = await contatoUseCase.ExecuteAsync(dto);
 
         contatoCriado.Nome.Should().Be(contatoEsperado.Nome);
         contatoCriado.Email.Should().Be(contatoEsperado.Email);
         contatoCriado.Telefone.Should().Be(contatoEsperado.Telefone);
-        contatoCriado.UsuarioId.Should().Be(contatoEsperado.UsuarioId);
         contatoRepository.Verify(repo => repo.AdicionarAsync(It.Is<Contato>(u =>
             u.Nome == contatoEsperado.Nome &&
             u.Email == contatoEsperado.Email &&
-            u.Telefone == contatoEsperado.Telefone &&
-            u.UsuarioId == contatoEsperado.UsuarioId)), Times.Once);
+            u.Telefone == contatoEsperado.Telefone)), Times.Once);
     }
     
     [Theory]
@@ -47,15 +39,9 @@ public class CriarContatoUseCaseTests
     public static async Task DeveLancarExcecaoQuandoDtoForInvalido(string? nome, string? email, string? telefone, string mensagem)
     {
         var contatoRepository = new Mock<IContatoRepository>();
-        var usuarioRepository = new Mock<IUsuarioRepository>();
         var obterContatoPorNomeEmail = new ObterContatoPorNomeEmailUseCase(contatoRepository.Object);
-        var obterUsuarioPorIdUseCase = new ObterUsuarioPorIdUseCase(usuarioRepository.Object);
-        var contatoUseCase = new CriarContatoUseCase(contatoRepository.Object, obterContatoPorNomeEmail, obterUsuarioPorIdUseCase);
+        var contatoUseCase = new CriarContatoUseCase(contatoRepository.Object, obterContatoPorNomeEmail);
         var dto = new CriarContatoDto() { Nome = nome!, Email = email!, Telefone = telefone!};
-
-        usuarioRepository
-            .Setup(r => r.ObterPorIdAsync(It.IsAny<int>()))
-            .ReturnsAsync(new Usuario() { });
 
         var act = async () => { await contatoUseCase.ExecuteAsync(dto); };
 
@@ -66,19 +52,14 @@ public class CriarContatoUseCaseTests
     public static async Task DeveLancarExcecaoQuandoContatoJaExistir()
     {
         var contatoRepository = new Mock<IContatoRepository>();
-        var usuarioRepository = new Mock<IUsuarioRepository>();
         var obterContatoPorNomeEmail = new ObterContatoPorNomeEmailUseCase(contatoRepository.Object);
-        var obterUsuarioPorIdUseCase = new ObterUsuarioPorIdUseCase(usuarioRepository.Object);
-        var contatoUseCase = new CriarContatoUseCase(contatoRepository.Object, obterContatoPorNomeEmail, obterUsuarioPorIdUseCase);
-        var dto = new CriarContatoDto() { Nome = "testeContato", Email = "testeemail@google.com", Telefone = "3299999-9999", UsuarioId = 1 };
-        var contatoEsperado = new Contato { Nome = dto.Nome, Email = dto.Email, Telefone = dto.Telefone, UsuarioId = dto.UsuarioId };
+        var contatoUseCase = new CriarContatoUseCase(contatoRepository.Object, obterContatoPorNomeEmail);
+        var dto = new CriarContatoDto() { Nome = "testeContato", Email = "testeemail@google.com", Telefone = "3299999-9999" };
+        var contatoEsperado = new Contato { Nome = dto.Nome, Email = dto.Email, Telefone = dto.Telefone };
 
         contatoRepository
             .Setup(r => r.ObterPorNomeEmailAsync(It.IsAny<string>(), It.IsAny<string>()))
             .ReturnsAsync(contatoEsperado);
-        usuarioRepository
-            .Setup(r => r.ObterPorIdAsync(It.IsAny<int>()))
-            .ReturnsAsync(new Usuario() { });
 
         var act = async () => { await contatoUseCase.ExecuteAsync(dto); };
 
@@ -90,11 +71,9 @@ public class CriarContatoUseCaseTests
     public static async Task DeveLancarExcecaoQuandoHouverErroDeBanco()
     {
         var contatoRepository = new Mock<IContatoRepository>();
-        var usuarioRepository = new Mock<IUsuarioRepository>();
         var obterContatoPorNomeEmail = new ObterContatoPorNomeEmailUseCase(contatoRepository.Object);
-        var obterUsuarioPorIdUseCase = new ObterUsuarioPorIdUseCase(usuarioRepository.Object);
-        var contatoUseCase = new CriarContatoUseCase(contatoRepository.Object, obterContatoPorNomeEmail, obterUsuarioPorIdUseCase);
-        var dto = new CriarContatoDto() { Nome = "testeContato", Email = "testeemail@google.com", Telefone = "3299999-9999", UsuarioId = 1 };
+        var contatoUseCase = new CriarContatoUseCase(contatoRepository.Object, obterContatoPorNomeEmail);
+        var dto = new CriarContatoDto() { Nome = "testeContato", Email = "testeemail@google.com", Telefone = "3299999-9999" };
 
         contatoRepository
             .Setup(r => r.AdicionarAsync(It.IsAny<Contato>()))
