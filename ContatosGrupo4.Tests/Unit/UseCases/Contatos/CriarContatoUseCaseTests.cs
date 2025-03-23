@@ -15,7 +15,7 @@ public class CriarContatoUseCaseTests
         var contatoRepository = new Mock<IContatoRepository>();
         var obterContatoPorNomeEmail = new ObterContatoPorNomeEmailUseCase(contatoRepository.Object);
         var contatoUseCase = new CriarContatoUseCase(contatoRepository.Object, obterContatoPorNomeEmail);
-        var dto = new CriarContatoDto() { Nome = "testeContato", Email = "testeemail@google.com", Telefone = "3299999-9999", UsuarioId = 1 };
+        var dto = new CriarContatoDto() { Nome = "testeContato", Email = "testeemail@google.com", Telefone = "3299999-9999" };
         var contatoEsperado = new Contato { Nome = dto.Nome, Email = dto.Email, Telefone = dto.Telefone };
         contatoRepository
             .Setup(r => r.AdicionarAsync(It.IsAny<Contato>()))
@@ -54,7 +54,7 @@ public class CriarContatoUseCaseTests
         var contatoRepository = new Mock<IContatoRepository>();
         var obterContatoPorNomeEmail = new ObterContatoPorNomeEmailUseCase(contatoRepository.Object);
         var contatoUseCase = new CriarContatoUseCase(contatoRepository.Object, obterContatoPorNomeEmail);
-        var dto = new CriarContatoDto() { Nome = "testeContato", Email = "testeemail@google.com", Telefone = "3299999-9999", UsuarioId = 1 };
+        var dto = new CriarContatoDto() { Nome = "testeContato", Email = "testeemail@google.com", Telefone = "3299999-9999" };
         var contatoEsperado = new Contato { Nome = dto.Nome, Email = dto.Email, Telefone = dto.Telefone };
 
         contatoRepository
@@ -73,7 +73,7 @@ public class CriarContatoUseCaseTests
         var contatoRepository = new Mock<IContatoRepository>();
         var obterContatoPorNomeEmail = new ObterContatoPorNomeEmailUseCase(contatoRepository.Object);
         var contatoUseCase = new CriarContatoUseCase(contatoRepository.Object, obterContatoPorNomeEmail);
-        var dto = new CriarContatoDto() { Nome = "testeContato", Email = "testeemail@google.com", Telefone = "3299999-9999", UsuarioId = 1 };
+        var dto = new CriarContatoDto() { Nome = "testeContato", Email = "testeemail@google.com", Telefone = "3299999-9999" };
 
         contatoRepository
             .Setup(r => r.AdicionarAsync(It.IsAny<Contato>()))
