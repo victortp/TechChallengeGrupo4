@@ -39,7 +39,7 @@ namespace ContatosGrupo4.Tests.Unit.Controllers
 
             object unusedCacheValue;
             cache
-                .Setup(x => x.TryGetValue(It.IsAny<object>(), out unusedCacheValue))
+                .Setup(x => x.TryGetValue(It.IsAny<object>(), out unusedCacheValue!))
                 .Returns(false);
             cache
                 .Setup(x => x.CreateEntry(It.IsAny<object>()))
