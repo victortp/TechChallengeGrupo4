@@ -215,10 +215,6 @@ public class ContatoController(ObterTodosContatosUseCase obterTodosContatosUseCa
             _memoryCache.Remove($"Contato_{idContato}");
             return NoContent();
         }
-        catch (ArgumentException ex)
-        {
-            return BadRequest(ex.Message);
-        }
         catch (Exception ex)
         {
             return StatusCode(500, $"Erro interno: {ex.Message}");
