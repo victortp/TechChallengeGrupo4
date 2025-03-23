@@ -13,7 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ContatosGrupo4.application\ContatosGrupo4.Application.csproj" />
+    <ProjectReference Include="..\ContatosGrupo4.Application\ContatosGrupo4.Application.csproj" />
   </ItemGroup>
 
   <PropertyGroup>
