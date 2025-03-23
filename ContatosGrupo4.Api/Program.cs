@@ -1,6 +1,7 @@
 using ContatosGrupo4.Api.Extensions;
 using ContatosGrupo4.Application.Extensions;
 using ContatosGrupo4.InfraStructure.Extensions;
+using Prometheus;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -27,11 +28,10 @@ if (app.Environment.IsDevelopment())
 
 app.UseRouting();
 app.UsePrometheus();
-
 app.UseAuthorization();
-
 app.UseHttpsRedirection();
 
 app.MapControllers();
+app.MapMetrics();
 
 app.Run();

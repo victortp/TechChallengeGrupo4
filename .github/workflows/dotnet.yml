@@ -14,23 +14,6 @@ jobs:
 
     runs-on: ubuntu-latest
 
-    services:
-        prometheus:
-            image: prom/prometheus
-            ports:
-                - 9090:9090
-            volumes:
-                - ${{ github.workspace }}/.github/prometheus.yml:/etc/prometheus/prometheus.yml
-
-        grafana:
-            image: grafana/grafana
-            ports:
-                - 3000:3000
-            options: 
-                - health-interval 10s
-                - health-timeout 5s
-                - health-retries 5
-
     steps:
     - name: Clonar repositório
       uses: actions/checkout@v4      
