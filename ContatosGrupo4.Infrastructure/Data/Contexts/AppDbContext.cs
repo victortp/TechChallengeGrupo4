@@ -1,5 +1,4 @@
 ﻿using System.Diagnostics.CodeAnalysis;
-using ContatosGrupo4.Application.Configurations;
 using ContatosGrupo4.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
@@ -37,12 +36,6 @@ namespace ContatosGrupo4.Infrastructure.Data.Contexts
                 .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
                 .Build();
 
-            var databaseSettings = new DatabaseSettings
-            {
-                ConnectionString = configuration.GetValue<string>("SqlServer:ConnectionString")
-            };
-
-            var options = Options.Create(databaseSettings);
             var optionsBuilder = new DbContextOptionsBuilder<AppDbContext>();
             optionsBuilder.UseSqlServer(configuration.GetValue<string>("SqlServer:ConnectionString"));
 
