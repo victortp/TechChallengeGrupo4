@@ -9,20 +9,10 @@ using Microsoft.Extensions.Options;
 namespace ContatosGrupo4.Infrastructure.Data.Contexts
 {
     [ExcludeFromCodeCoverage]
-    public class AppDbContext(IOptions<DatabaseSettings> databaseSettings) : DbContext
+    public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(options)
 
     {
-        private readonly IOptions<DatabaseSettings> _databaseSettings = databaseSettings;
         public DbSet<Contato> Contato { get; set; }
-
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            if (!optionsBuilder.IsConfigured)
-            {
-
-                optionsBuilder.UseSqlServer(_databaseSettings.Value.ConnectionString);
-            } 
-        }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -53,8 +43,10 @@ namespace ContatosGrupo4.Infrastructure.Data.Contexts
             };
 
             var options = Options.Create(databaseSettings);
+            var optionsBuilder = new DbContextOptionsBuilder<AppDbContext>();
+            optionsBuilder.UseSqlServer(configuration.GetValue<string>("SqlServer:ConnectionString"));
 
-            return new AppDbContext(options);
+            return new AppDbContext(optionsBuilder.Options);
         }
     }
 }

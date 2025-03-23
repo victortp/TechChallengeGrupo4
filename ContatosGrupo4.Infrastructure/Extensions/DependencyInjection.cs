@@ -1,5 +1,4 @@
 ﻿using System.Diagnostics.CodeAnalysis;
-using ContatosGrupo4.Application.Configurations;
 using ContatosGrupo4.Domain.Interfaces;
 using ContatosGrupo4.Infrastructure.Data.Contexts;
 using ContatosGrupo4.Infrastructure.Data.Repositories;
@@ -13,12 +12,7 @@ namespace ContatosGrupo4.InfraStructure.Extensions
     public static class DependencyInjection
     {
         public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
-        {
-            services.Configure<DatabaseSettings>(c =>
-            {
-                c.ConnectionString = configuration.GetValue<string>("SqlServer:ConnectionString");
-            });
-
+        { 
             services.AddDbContext<AppDbContext>(c =>
             {
                 c.UseLazyLoadingProxies();
