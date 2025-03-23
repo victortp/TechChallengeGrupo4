@@ -7,11 +7,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ContatosGrupo4.Api", "Conta
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ContatosGrupo4.Domain", "ContatosGrupo4.Domain\ContatosGrupo4.Domain.csproj", "{07397860-6F72-4F9B-AD29-E6C11265A873}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ContatosGrupo4.Application", "ContatosGrupo4.application\ContatosGrupo4.Application.csproj", "{4824036C-0D2F-42F6-A862-673422819BE6}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ContatosGrupo4.Application", "ContatosGrupo4.Application\ContatosGrupo4.Application.csproj", "{4824036C-0D2F-42F6-A862-673422819BE6}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ContatosGrupo4.Infrastructure", "ContatosGrupo4.Infrastructure\ContatosGrupo4.Infrastructure.csproj", "{88B0CFFF-9053-42F6-A7D0-28E7D9DF0141}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ContatosGrupo4.Tests", "ContatosGrupo4.tests\ContatosGrupo4.Tests.csproj", "{12E9C304-2EE8-469C-B2D8-77A8CDCA458E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ContatosGrupo4.Tests", "ContatosGrupo4.Tests\ContatosGrupo4.Tests.csproj", "{12E9C304-2EE8-469C-B2D8-77A8CDCA458E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
