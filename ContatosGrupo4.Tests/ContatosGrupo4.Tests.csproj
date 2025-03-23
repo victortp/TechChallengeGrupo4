@@ -33,7 +33,7 @@
     <ProjectReference Include="..\ContatosGrupo4.Api\ContatosGrupo4.Api.csproj" />
     <ProjectReference Include="..\ContatosGrupo4.Infrastructure\ContatosGrupo4.Infrastructure.csproj" />
     <ProjectReference Include="..\ContatosGrupo4.Application\ContatosGrupo4.Application.csproj" />
-    <ProjectReference Include="..\ContatosGrupo4.domain\ContatosGrupo4.Domain.csproj" />
+    <ProjectReference Include="..\ContatosGrupo4.Domain\ContatosGrupo4.Domain.csproj" />
   </ItemGroup>
 
 </Project>
