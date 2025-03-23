@@ -1,5 +1,6 @@
 using ContatosGrupo4.Application.Extensions;
 using ContatosGrupo4.InfraStructure.Extensions;
+using Prometheus;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -28,5 +29,7 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
+app.UseHttpMetrics();
+app.MapMetrics();
 
 app.Run();
