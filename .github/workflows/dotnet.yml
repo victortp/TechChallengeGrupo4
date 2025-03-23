@@ -16,9 +16,7 @@ jobs:
 
     steps:
     - name: Clonar repositório
-      uses: actions/checkout@v4
-    - name: List files (for debugging)
-      run: ls -R
+      uses: actions/checkout@v4      
     - name: Setup .NET
       uses: actions/setup-dotnet@v4
       with:
