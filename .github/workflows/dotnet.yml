@@ -19,18 +19,17 @@ jobs:
             image: prom/prometheus
             ports:
                 - 9090:9090
-            options: >-
-                -v ${{ github.workspace }}/.github/prometheus.yml:/etc/prometheus/prometheus.yml
+            volumes:
+                - ${{ github.workspace }}/.github/prometheus.yml:/etc/prometheus/prometheus.yml
 
         grafana:
             image: grafana/grafana
             ports:
                 - 3000:3000
-            options: >-
-                --health-cmd "curl --fail http://localhost:3000/api/health || exit 1"
-                --health-interval 10s
-                --health-timeout 5s
-                --health-retries 5
+            options: 
+                - health-interval 10s
+                - health-timeout 5s
+                - health-retries 5
 
     steps:
     - name: Clonar repositório
