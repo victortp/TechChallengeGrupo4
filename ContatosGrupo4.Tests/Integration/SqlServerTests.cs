@@ -1,6 +1,7 @@
 ﻿using ContatosGrupo4.Infrastructure.Data.Contexts;
 using ContatosGrupo4.Infrastructure.Data.Repositories;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Memory;
 using Testcontainers.MsSql;
 
 namespace ContatosGrupo4.Tests.Integration
@@ -10,6 +11,7 @@ namespace ContatosGrupo4.Tests.Integration
         private readonly MsSqlContainer _dbContainer = new MsSqlBuilder().Build();
         private AppDbContext _dbContext = null!;
         public ContatoRepository contatoRepository = null!;
+        public IMemoryCache memoryCache = null!;
 
         public async Task InitializeAsync()
         {
@@ -27,6 +29,8 @@ namespace ContatosGrupo4.Tests.Integration
             };
 
             contatoRepository = new ContatoRepository(_dbContext);
+
+            memoryCache = new MemoryCache(new MemoryCacheOptions());
         }
 
         public Task DisposeAsync()

@@ -4,7 +4,6 @@ using ContatosGrupo4.Application.UseCases.Contatos;
 using ContatosGrupo4.Domain.Entities;
 using ContatosGrupo4.Domain.Interfaces;
 using FluentAssertions;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
 using Moq;
@@ -20,21 +19,20 @@ namespace ContatosGrupo4.Tests.Unit.Controllers
         {
             _repository = new Mock<IContatoRepository>();
             var cache = new Mock<IMemoryCache>();
-            var obterTodosContatosUseCase = new ObterTodosContatosUseCase(_repository.Object);
-            var obterContatoPorIdUseCase = new ObterContatoPorIdUseCase(_repository.Object);
+            var obterTodosContatosUseCase = new ObterTodosContatosUseCase(_repository.Object, cache.Object);
+            var obterContatoPorIdUseCase = new ObterContatoPorIdUseCase(_repository.Object, cache.Object);
             var obterContatoPorNomeEmailUseCase = new ObterContatoPorNomeEmailUseCase(_repository.Object);
-            var criarContatoUseCase = new CriarContatoUseCase(_repository.Object, obterContatoPorNomeEmailUseCase);
-            var atualizarContatoUseCase = new AtualizarContatoUseCase(_repository.Object, obterContatoPorIdUseCase);
-            var excluirContatoUseCase = new ExcluirContatoUseCase(_repository.Object);
-            var obterContatosPorDddUseCase = new ObterContatosPorDddUseCase(_repository.Object);
+            var criarContatoUseCase = new CriarContatoUseCase(_repository.Object, obterContatoPorNomeEmailUseCase, cache.Object);
+            var atualizarContatoUseCase = new AtualizarContatoUseCase(_repository.Object, obterContatoPorIdUseCase, cache.Object);
+            var excluirContatoUseCase = new ExcluirContatoUseCase(_repository.Object, cache.Object);
+            var obterContatosPorDddUseCase = new ObterContatosPorDddUseCase(_repository.Object, cache.Object);
             _controller = new ContatoController(
                 obterTodosContatosUseCase,
                 obterContatoPorIdUseCase,
                 criarContatoUseCase,
                 atualizarContatoUseCase,
                 excluirContatoUseCase,
-                obterContatosPorDddUseCase,
-                cache.Object
+                obterContatosPorDddUseCase
             );
 
             object unusedCacheValue;
@@ -44,7 +42,6 @@ namespace ContatosGrupo4.Tests.Unit.Controllers
             cache
                 .Setup(x => x.CreateEntry(It.IsAny<object>()))
                 .Returns(Mock.Of<ICacheEntry>());
-
         }
 
         [Fact]
@@ -253,7 +250,7 @@ namespace ContatosGrupo4.Tests.Unit.Controllers
         }
 
         [Fact]
-        public async Task AtualizarContato_DeveRetornarBadRequest_QuandoUsuarioNaoExistir()
+        public async Task AtualizarContato_DeveRetornarNotFound_QuandoUsuarioNaoExistir()
         {
             _repository.Setup(r => r.ObterPorIdAsync(It.IsAny<int>())).ReturnsAsync((Contato)null!);
 
@@ -261,7 +258,7 @@ namespace ContatosGrupo4.Tests.Unit.Controllers
 
             var resultado = await _controller.AtualizarContato(1, contatoDto);
 
-            resultado.Should().BeOfType<BadRequestObjectResult>();
+            resultado.Should().BeOfType<NotFoundObjectResult>();
         }
 
         [Fact]
@@ -289,7 +286,7 @@ namespace ContatosGrupo4.Tests.Unit.Controllers
         [Fact]
         public async Task ExcluirContato_DeveRetornar500_QuandoLancarExcecao()
         {
-            _repository.Setup(r => r.ExcluirAsync(It.IsAny<int>())).Throws<Exception>();
+            _repository.Setup(r => r.ObterPorIdAsync(It.IsAny<int>())).Throws<Exception>();
 
             var resultado = await _controller.ExcluirContato(1);
 

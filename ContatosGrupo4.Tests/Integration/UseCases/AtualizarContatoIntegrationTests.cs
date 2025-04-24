@@ -2,6 +2,7 @@
 using ContatosGrupo4.Application.UseCases.Contatos;
 using ContatosGrupo4.Infrastructure.Data.Repositories;
 using FluentAssertions;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace ContatosGrupo4.Tests.Integration.UseCases
 {
@@ -10,12 +11,14 @@ namespace ContatosGrupo4.Tests.Integration.UseCases
         private readonly AtualizarContatoUseCase _atualizarContatoUseCase;
         private readonly ObterContatoPorIdUseCase _obterContatoPorIdUseCase;
         private readonly ContatoRepository _repository;
+        private readonly IMemoryCache _memoryCache;
 
         public AtualizarContatoIntegrationTests(SqlServerTests fixture)
         {
+            _memoryCache = fixture.memoryCache;
             _repository = fixture.contatoRepository;
-            _obterContatoPorIdUseCase = new ObterContatoPorIdUseCase(fixture.contatoRepository);
-            _atualizarContatoUseCase = new AtualizarContatoUseCase(fixture.contatoRepository, _obterContatoPorIdUseCase);
+            _obterContatoPorIdUseCase = new ObterContatoPorIdUseCase(_repository, _memoryCache);
+            _atualizarContatoUseCase = new AtualizarContatoUseCase(_repository, _obterContatoPorIdUseCase, _memoryCache);
         }
 
         [Fact]
@@ -28,10 +31,12 @@ namespace ContatosGrupo4.Tests.Integration.UseCases
             
             await _repository.AdicionarAsync(contato);
             var contatoCriado = await _repository.ObterPorNomeEmailAsync(contato.Nome, contato.Email);
+            contatoCriado.Should().NotBeNull();
+            int contatoId = contatoCriado!.Id;
 
             var dto = new AtualizarContatoDto
             {
-                Id = contatoCriado!.Id,
+                Id = contatoId,
                 Nome = contatos[1].Nome,
                 Email = contatos[1].Email,
                 Telefone = contatos[1].Telefone
@@ -40,7 +45,23 @@ namespace ContatosGrupo4.Tests.Integration.UseCases
             var resultado = await _atualizarContatoUseCase.ExecuteAsync(dto);
 
             resultado.Should().NotBeNull();
-            resultado.Nome.Should().Be(dto.Nome);
+            resultado!.Nome.Should().Be(dto.Nome);
+        }
+
+        [Fact]
+        public async Task ExecuteAsync_DeveRetornarNull_QuandoContatoNaoExiste()
+        {
+            var dto = new AtualizarContatoDto
+            {
+                Id = 999999,
+                Nome = "Teste Nao Existe",
+                Email = "nao@existe.com",
+                Telefone = "11999998888"
+            };
+
+            var resultado = await _atualizarContatoUseCase.ExecuteAsync(dto);
+
+            resultado.Should().BeNull();
         }
     }
 }

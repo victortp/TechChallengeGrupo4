@@ -1,6 +1,7 @@
 ﻿using ContatosGrupo4.Application.UseCases.Contatos;
 using ContatosGrupo4.Infrastructure.Data.Repositories;
 using FluentAssertions;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace ContatosGrupo4.Tests.Integration.UseCases
 {
@@ -8,11 +9,13 @@ namespace ContatosGrupo4.Tests.Integration.UseCases
     {
         private readonly ExcluirContatoUseCase _useCase;
         private readonly ContatoRepository _repository;
+        private readonly IMemoryCache _memoryCache;
 
         public ExcluirContatoIntegrationTests(SqlServerTests fixture)
         {
+            _memoryCache = fixture.memoryCache;
             _repository = fixture.contatoRepository;
-            _useCase = new ExcluirContatoUseCase(fixture.contatoRepository);
+            _useCase = new ExcluirContatoUseCase(_repository, _memoryCache);
         }
 
         [Fact]

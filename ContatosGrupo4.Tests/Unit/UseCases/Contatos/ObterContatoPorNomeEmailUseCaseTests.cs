@@ -21,8 +21,8 @@ public class ObterContatoPorNomeEmailUseCaseTests
 
         contato.Should().NotBeNull();
         contato!.Id.Should().Be(1);
-        contato!.Nome.Should().Be(contatoEsperado.Nome);
-        contato!.Email.Should().Be(contatoEsperado.Email);
-        contato!.Telefone.Should().Be(contatoEsperado.Telefone);
+        contato.Nome.Should().Be(contatoEsperado.Nome);
+        contato.Email.Should().Be(contatoEsperado.Email);
+        contato.Telefone.Should().Be(contatoEsperado.Telefone);
     }
 }

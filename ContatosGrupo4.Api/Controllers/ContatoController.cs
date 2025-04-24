@@ -8,13 +8,13 @@ namespace ContatosGrupo4.Api.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-public class ContatoController(ObterTodosContatosUseCase obterTodosContatosUseCase
-                                , ObterContatoPorIdUseCase obterContatoPorIdUseCase
-                                , CriarContatoUseCase criarContatoUseCase
-                                , AtualizarContatoUseCase atualizarContatoUseCase
-                                , ExcluirContatoUseCase excluirContatoUseCase
-                                , ObterContatosPorDddUseCase obterContatosPorDddUseCase
-                                , IMemoryCache memoryCache) : ControllerBase
+public class ContatoController(
+    ObterTodosContatosUseCase obterTodosContatosUseCase,
+    ObterContatoPorIdUseCase obterContatoPorIdUseCase,
+    CriarContatoUseCase criarContatoUseCase,
+    AtualizarContatoUseCase atualizarContatoUseCase,
+    ExcluirContatoUseCase excluirContatoUseCase,
+    ObterContatosPorDddUseCase obterContatosPorDddUseCase) : ControllerBase
 {
     private readonly ObterTodosContatosUseCase _obterTodosContatosUseCase = obterTodosContatosUseCase;
     private readonly ObterContatoPorIdUseCase _obterContatoPorIdUseCase = obterContatoPorIdUseCase;
@@ -22,39 +22,20 @@ public class ContatoController(ObterTodosContatosUseCase obterTodosContatosUseCa
     private readonly AtualizarContatoUseCase _atualizarContatoUseCase = atualizarContatoUseCase;
     private readonly ExcluirContatoUseCase _excluirContatoUseCase = excluirContatoUseCase;
     private readonly ObterContatosPorDddUseCase _obterContatosPorDddUseCase = obterContatosPorDddUseCase;
-    private readonly IMemoryCache _memoryCache = memoryCache;
 
     [HttpGet]
     public async Task<IActionResult> ObterTodosContatos()
     {
-        const string cacheKey = "TodosContatos";
-        List<ContatoDto> contatoDtos = [];
-
-        if (!_memoryCache.TryGetValue(cacheKey, out IEnumerable<Contato>? contatos))
+        var contatos = await _obterTodosContatosUseCase.ExecuteAsync();
+        var contatoDtos = contatos.Select(contato => new ContatoDto
         {
-            contatos = await _obterTodosContatosUseCase.ExecuteAsync();
-            var cacheEntryOptions = new MemoryCacheEntryOptions
-            {
-                AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(5),
-                SlidingExpiration = TimeSpan.FromMinutes(2)
-            };
-            _memoryCache.Set(cacheKey, contatos, cacheEntryOptions);
-        }
-
-        if (contatos is null) return Ok();
-
-        foreach (var contato in contatos)
-        {
-            contatoDtos.Add(new ContatoDto
-            {
-                Id = contato.Id,
-                DataCriacao = contato.DataCriacao,
-                DataAtualizacao = contato.DataAtualizacao,
-                Nome = contato.Nome,
-                Telefone = contato.Telefone,
-                Email = contato.Email
-            });
-        }
+            Id = contato.Id,
+            DataCriacao = contato.DataCriacao,
+            DataAtualizacao = contato.DataAtualizacao,
+            Nome = contato.Nome,
+            Telefone = contato.Telefone,
+            Email = contato.Email
+        }).ToList();
 
         return Ok(contatoDtos);
     }
@@ -62,34 +43,16 @@ public class ContatoController(ObterTodosContatosUseCase obterTodosContatosUseCa
     [HttpGet("ddd/{codigo}")]
     public async Task<IActionResult> ObterTodosContatosDDD(int codigo)
     {
-        string cacheKey = $"TodosContatos";
-        List<ContatoDto> contatoDtos = [];
-
-        if (!_memoryCache.TryGetValue(cacheKey, out IEnumerable<Contato>? contatos))
+        var contatos = await _obterContatosPorDddUseCase.ExecuteAsync(codigo);
+        var contatoDtos = contatos.Select(contato => new ContatoDto
         {
-            contatos = await _obterContatosPorDddUseCase.ExecuteAsync(codigo);
-            var cacheEntryOptions = new MemoryCacheEntryOptions
-            {
-                AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(5),
-                SlidingExpiration = TimeSpan.FromMinutes(2)
-            };
-        }
-
-        if (contatos is null) return Ok();
-
-        foreach (var contato in contatos)
-        {
-            if (!contato.Telefone.StartsWith(codigo.ToString())) continue;
-            contatoDtos.Add(new ContatoDto
-            {
-                Id = contato.Id,
-                DataCriacao = contato.DataCriacao,
-                DataAtualizacao = contato.DataAtualizacao,
-                Nome = contato.Nome,
-                Telefone = contato.Telefone,
-                Email = contato.Email
-            });
-        }
+            Id = contato.Id,
+            DataCriacao = contato.DataCriacao,
+            DataAtualizacao = contato.DataAtualizacao,
+            Nome = contato.Nome,
+            Telefone = contato.Telefone,
+            Email = contato.Email
+        }).ToList();
 
         return Ok(contatoDtos);
     }
@@ -99,20 +62,7 @@ public class ContatoController(ObterTodosContatosUseCase obterTodosContatosUseCa
     {
         try
         {
-            var cacheKey = $"Contato_{idContato}";
-
-            if (!_memoryCache.TryGetValue(cacheKey, out Contato? contato))
-            {
-                contato = await _obterContatoPorIdUseCase.ExecuteAsync(idContato);
-
-                if (contato == null) return NotFound($"Contato {idContato} não encontrado");
-
-                var cacheEntryOptions = new MemoryCacheEntryOptions
-                {
-                    AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(10)
-                };
-                _memoryCache.Set(cacheKey, contato, cacheEntryOptions);
-            }
+            var contato = await _obterContatoPorIdUseCase.ExecuteAsync(idContato);
 
             if (contato is null) return NotFound($"Contato {idContato} não encontrado");
 
@@ -128,13 +78,9 @@ public class ContatoController(ObterTodosContatosUseCase obterTodosContatosUseCa
 
             return Ok(contatoDto);
         }
-        catch (ArgumentException ex)
-        {
-            return NotFound(ex.Message);
-        }
         catch (Exception ex)
         {
-            return StatusCode(500, $"Erro interno: {ex.Message}");
+            return StatusCode(500, $"Erro interno ao buscar contato: {ex.Message}");
         }
     }
 
@@ -144,8 +90,8 @@ public class ContatoController(ObterTodosContatosUseCase obterTodosContatosUseCa
         try
         {
             if (contatoCriarDto == null) return BadRequest("Dados inválidos");
+
             var contato = await _criarContatoUseCase.ExecuteAsync(contatoCriarDto);
-            _memoryCache.Remove("TodosContatos");
 
             var contatoDto = new ContatoDto
             {
@@ -157,7 +103,7 @@ public class ContatoController(ObterTodosContatosUseCase obterTodosContatosUseCa
                 Email = contato.Email
             };
 
-            return CreatedAtAction(nameof(CriarContato), new { id = contato.Id }, contatoDto);
+            return CreatedAtAction(nameof(ObterContatoPorId), new { idContato = contato.Id }, contatoDto);
         }
         catch (ArgumentException ex)
         {
@@ -169,19 +115,20 @@ public class ContatoController(ObterTodosContatosUseCase obterTodosContatosUseCa
         }
         catch (Exception ex)
         {
-            return StatusCode(500, $"Erro interno: {ex.Message}");
+            return StatusCode(500, $"Erro interno ao criar contato: {ex.Message}");
         }
     }
 
     [HttpPut("{idContato}")]
     public async Task<IActionResult> AtualizarContato(int idContato, [FromBody] AtualizarContatoDto contatoAtualizarDto)
     {
+        if (contatoAtualizarDto == null || idContato != contatoAtualizarDto.Id) return BadRequest("Dados inválidos");
+
         try
         {
-            if (contatoAtualizarDto == null || idContato != contatoAtualizarDto.Id) return BadRequest("Dados inválidos");
             var contato = await _atualizarContatoUseCase.ExecuteAsync(contatoAtualizarDto);
-            _memoryCache.Remove("TodosContatos");
-            _memoryCache.Remove($"Contato_{idContato}");
+
+            if (contato == null) return NotFound($"Contato {idContato} não encontrado para atualização.");
 
             var contatoDto = new ContatoDto
             {
@@ -201,7 +148,7 @@ public class ContatoController(ObterTodosContatosUseCase obterTodosContatosUseCa
         }
         catch (Exception ex)
         {
-            return StatusCode(500, $"Erro interno: {ex.Message}");
+            return StatusCode(500, $"Erro interno ao atualizar contato: {ex.Message}");
         }
     }
 
@@ -211,13 +158,11 @@ public class ContatoController(ObterTodosContatosUseCase obterTodosContatosUseCa
         try
         {
             await _excluirContatoUseCase.ExecuteAsync(idContato);
-            _memoryCache.Remove("TodosContatos");
-            _memoryCache.Remove($"Contato_{idContato}");
             return NoContent();
         }
         catch (Exception ex)
         {
-            return StatusCode(500, $"Erro interno: {ex.Message}");
+            return StatusCode(500, $"Erro interno ao excluir contato: {ex.Message}");
         }
     }
 }

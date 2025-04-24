@@ -1,6 +1,7 @@
 ﻿using ContatosGrupo4.Application.UseCases.Contatos;
 using ContatosGrupo4.Infrastructure.Data.Repositories;
 using FluentAssertions;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace ContatosGrupo4.Tests.Integration.UseCases
 {
@@ -12,7 +13,7 @@ namespace ContatosGrupo4.Tests.Integration.UseCases
         public ObterContatoPorNomeEmailIntegrationTests(SqlServerTests fixture)
         {
             _repository = fixture.contatoRepository;
-            _useCase = new ObterContatoPorNomeEmailUseCase(fixture.contatoRepository);
+            _useCase = new ObterContatoPorNomeEmailUseCase(_repository);
         }
 
         [Fact]

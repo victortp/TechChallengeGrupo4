@@ -1,17 +1,20 @@
 ﻿using ContatosGrupo4.Application.DTOs;
 using ContatosGrupo4.Application.UseCases.Contatos;
 using FluentAssertions;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace ContatosGrupo4.Tests.Integration.UseCases
 {
     public class CriarContatoIntegrationTests : IClassFixture<SqlServerTests>
     {
         private readonly CriarContatoUseCase _criarContatoUseCase;
+        private readonly IMemoryCache _memoryCache;
 
         public CriarContatoIntegrationTests(SqlServerTests fixture)
         {
+            _memoryCache = fixture.memoryCache;
             var obterContatoPorNomeEmailUseCase = new ObterContatoPorNomeEmailUseCase(fixture.contatoRepository);
-            _criarContatoUseCase = new CriarContatoUseCase(fixture.contatoRepository, obterContatoPorNomeEmailUseCase);
+            _criarContatoUseCase = new CriarContatoUseCase(fixture.contatoRepository, obterContatoPorNomeEmailUseCase, _memoryCache);
         }
 
         [Fact]

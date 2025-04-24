@@ -2,15 +2,19 @@
 using ContatosGrupo4.Application.Validations;
 using ContatosGrupo4.Domain.Entities;
 using ContatosGrupo4.Domain.Interfaces;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace ContatosGrupo4.Application.UseCases.Contatos;
 
 public class CriarContatoUseCase (
     IContatoRepository contatoRepository,
-    ObterContatoPorNomeEmailUseCase obterContatoPorNomeEmail)
+    ObterContatoPorNomeEmailUseCase obterContatoPorNomeEmail,
+    IMemoryCache memoryCache)
 {
     private readonly IContatoRepository _contatoRepository = contatoRepository;
     private readonly ObterContatoPorNomeEmailUseCase _obterContatoPorNomeEmail = obterContatoPorNomeEmail;
+    private readonly IMemoryCache _memoryCache = memoryCache;
+
     public async Task<Contato> ExecuteAsync (CriarContatoDto contatoDto)
     {
         try
@@ -23,12 +27,12 @@ public class CriarContatoUseCase (
 
             if (!ContatoValidator.ValidarTelefone(contatoDto.Telefone))
             {
-                throw new ArgumentNullException("Telefone não informado ou inválido.", nameof(contatoDto.Telefone));
+                throw new ArgumentException("Telefone não informado ou inválido.", nameof(contatoDto.Telefone));
             }
 
             if (!ContatoValidator.ValidarEmail(contatoDto.Email))
             {
-                throw new ArgumentNullException("E-mail não informado ou inválido.", nameof(contatoDto.Email));
+                throw new ArgumentException("E-mail não informado ou inválido.", nameof(contatoDto.Email));
             }
 
             var contatoExistente = await _obterContatoPorNomeEmail.ExecuteAsync(contatoDto.Nome, contatoDto.Email);
@@ -46,6 +50,10 @@ public class CriarContatoUseCase (
             contato.SetDataCriacao();
 
             await _contatoRepository.AdicionarAsync(contato);
+
+            _memoryCache.Remove("TodosContatos");
+            string ddd = contato.Telefone.Substring(0, 2);
+            _memoryCache.Remove($"Contatos_DDD_{ddd}");
 
             return contato;
         }
