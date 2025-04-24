@@ -85,25 +85,15 @@ public class ContatoController(
     }
 
     [HttpPost]
-    public async Task<IActionResult> CriarContato([FromBody] CriarContatoDto contatoCriarDto)
+    public async Task<IActionResult> CriarContato([FromBody] CriarContatoDto criarContatoDto)
     {
         try
         {
-            if (contatoCriarDto == null) return BadRequest("Dados inválidos");
+            if (criarContatoDto == null) return BadRequest("Dados inválidos");
 
-            var contato = await _criarContatoUseCase.ExecuteAsync(contatoCriarDto);
+            await _criarContatoUseCase.ExecuteAsync(criarContatoDto);
 
-            var contatoDto = new ContatoDto
-            {
-                Id = contato.Id,
-                DataCriacao = contato.DataCriacao,
-                DataAtualizacao = contato.DataAtualizacao,
-                Nome = contato.Nome,
-                Telefone = contato.Telefone,
-                Email = contato.Email
-            };
-
-            return CreatedAtAction(nameof(ObterContatoPorId), new { idContato = contato.Id }, contatoDto);
+            return Accepted(criarContatoDto);
         }
         catch (ArgumentException ex)
         {
@@ -113,6 +103,10 @@ public class ContatoController(
         {
             return Conflict(ex.Message);
         }
+        catch (ApplicationException ex)
+        {
+            return StatusCode(502, $"Falha ao enfileirar a solicitação: {ex.Message}");
+        }
         catch (Exception ex)
         {
             return StatusCode(500, $"Erro interno ao criar contato: {ex.Message}");
@@ -120,31 +114,25 @@ public class ContatoController(
     }
 
     [HttpPut("{idContato}")]
-    public async Task<IActionResult> AtualizarContato(int idContato, [FromBody] AtualizarContatoDto contatoAtualizarDto)
+    public async Task<IActionResult> AtualizarContato(int idContato, [FromBody] AtualizarContatoDto atualizarContatoDto)
     {
-        if (contatoAtualizarDto == null || idContato != contatoAtualizarDto.Id) return BadRequest("Dados inválidos");
+        if (atualizarContatoDto == null || idContato != atualizarContatoDto.Id) return BadRequest("Dados inválidos");
 
         try
         {
-            var contato = await _atualizarContatoUseCase.ExecuteAsync(contatoAtualizarDto);
+            var publicou = await _atualizarContatoUseCase.ExecuteAsync(atualizarContatoDto);
 
-            if (contato == null) return NotFound($"Contato {idContato} não encontrado para atualização.");
+            if (!publicou) return NotFound($"Contato {idContato} não encontrado para atualização.");
 
-            var contatoDto = new ContatoDto
-            {
-                Id = contato.Id,
-                DataCriacao = contato.DataCriacao,
-                DataAtualizacao = contato.DataAtualizacao,
-                Nome = contato.Nome,
-                Telefone = contato.Telefone,
-                Email = contato.Email
-            };
-
-            return Ok(contatoDto);
+            return Accepted(atualizarContatoDto);
         }
         catch (ArgumentException ex)
         {
             return BadRequest(ex.Message);
+        }
+        catch (ApplicationException ex)
+        {
+            return StatusCode(502, $"Falha ao enfileirar a solicitação: {ex.Message}");
         }
         catch (Exception ex)
         {
@@ -157,8 +145,15 @@ public class ContatoController(
     {
         try
         {
-            await _excluirContatoUseCase.ExecuteAsync(idContato);
-            return NoContent();
+            var publicou = await _excluirContatoUseCase.ExecuteAsync(idContato);
+
+            if (!publicou) return NotFound($"Contato {idContato} não encontrado para exclusão.");
+
+            return Accepted(idContato);
+        }
+        catch (ApplicationException ex)
+        {
+            return StatusCode(502, $"Falha ao enfileirar a solicitação: {ex.Message}");
         }
         catch (Exception ex)
         {

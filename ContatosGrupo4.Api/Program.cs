@@ -1,4 +1,5 @@
 using ContatosGrupo4.Application.Extensions;
+using ContatosGrupo4.Application.Configurations;
 using ContatosGrupo4.InfraStructure.Extensions;
 using Prometheus;
 
@@ -14,6 +15,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddInfrastructure(builder.Configuration);
 builder.Services.AddUseCases();
+builder.Services.AddOptions<RabbitMQOptions>().BindConfiguration("RabbitMQ");
 
 var app = builder.Build();
 
