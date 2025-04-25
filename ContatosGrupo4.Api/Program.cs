@@ -2,6 +2,7 @@ using ContatosGrupo4.Application.Extensions;
 using ContatosGrupo4.Application.Configurations;
 using ContatosGrupo4.InfraStructure.Extensions;
 using Prometheus;
+using System.Diagnostics.CodeAnalysis;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -35,3 +36,5 @@ app.UseHttpMetrics();
 app.MapMetrics();
 
 app.Run();
+
+[ExcludeFromCodeCoverage] public partial class Program { }

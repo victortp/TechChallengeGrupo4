@@ -1,10 +1,12 @@
-﻿using System.Text;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Text;
 using System.Text.Json;
 using ContatosGrupo4.Application.Interfaces;
 using RabbitMQ.Client;
 
 namespace ContatosGrupo4.Infrastructure.Messaging
 {
+    [ExcludeFromCodeCoverage]
     public class RabbitMQPublisher(IConnectionFactory connectionFactory) : IMessagePublisher
     {
         private readonly IConnectionFactory _connectionFactory = connectionFactory;

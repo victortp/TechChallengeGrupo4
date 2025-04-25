@@ -2,8 +2,6 @@
 using ContatosGrupo4.Application.DTOs;
 using ContatosGrupo4.Application.Interfaces;
 using ContatosGrupo4.Application.Validations;
-using ContatosGrupo4.Domain.Entities;
-using ContatosGrupo4.Domain.Interfaces;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Options;
 
