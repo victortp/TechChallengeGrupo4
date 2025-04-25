@@ -3,6 +3,7 @@ using ContatosGrupo4.Application.Configurations;
 using ContatosGrupo4.InfraStructure.Extensions;
 using Prometheus;
 using System.Diagnostics.CodeAnalysis;
+using ContatosGrupo4.Infrastructure.Messaging.Consumers;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,6 +18,8 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddInfrastructure(builder.Configuration);
 builder.Services.AddUseCases();
 builder.Services.AddOptions<RabbitMQOptions>().BindConfiguration("RabbitMQ");
+
+builder.Services.AddHostedService<ContatoConsumerService>();
 
 var app = builder.Build();
 

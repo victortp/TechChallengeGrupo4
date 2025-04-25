@@ -4,7 +4,7 @@ using System.Text.Json;
 using ContatosGrupo4.Application.Interfaces;
 using RabbitMQ.Client;
 
-namespace ContatosGrupo4.Infrastructure.Messaging
+namespace ContatosGrupo4.Infrastructure.Messaging.Producers
 {
     [ExcludeFromCodeCoverage]
     public class RabbitMQPublisher(IConnectionFactory connectionFactory) : IMessagePublisher

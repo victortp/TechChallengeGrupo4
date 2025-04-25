@@ -4,7 +4,7 @@ using ContatosGrupo4.Application.Interfaces;
 using ContatosGrupo4.Domain.Interfaces;
 using ContatosGrupo4.Infrastructure.Data.Contexts;
 using ContatosGrupo4.Infrastructure.Data.Repositories;
-using ContatosGrupo4.Infrastructure.Messaging;
+using ContatosGrupo4.Infrastructure.Messaging.Producers;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
