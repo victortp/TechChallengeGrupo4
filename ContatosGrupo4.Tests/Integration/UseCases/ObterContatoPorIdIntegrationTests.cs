@@ -5,16 +5,16 @@ using Microsoft.Extensions.Caching.Memory;
 
 namespace ContatosGrupo4.Tests.Integration.UseCases
 {
-    public class ObterContatoPorIdIntegrationTests : IClassFixture<SqlServerTests>
+    public class ObterContatoPorIdIntegrationTests : IClassFixture<IntegrationTestsFixture>
     {
         private readonly ObterContatoPorIdUseCase _useCase;
         private readonly ContatoRepository _repository;
         private readonly IMemoryCache _memoryCache;
 
-        public ObterContatoPorIdIntegrationTests(SqlServerTests fixture)
+        public ObterContatoPorIdIntegrationTests(IntegrationTestsFixture fixture)
         {
-            _memoryCache = fixture.memoryCache;
-            _repository = fixture.contatoRepository;
+            _memoryCache = fixture.MemoryCache;
+            _repository = fixture.ContatoRepository;
             _useCase = new ObterContatoPorIdUseCase(_repository, _memoryCache);
         }
 

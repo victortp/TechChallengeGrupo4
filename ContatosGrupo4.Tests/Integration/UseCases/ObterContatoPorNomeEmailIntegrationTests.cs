@@ -5,14 +5,14 @@ using Microsoft.Extensions.Caching.Memory;
 
 namespace ContatosGrupo4.Tests.Integration.UseCases
 {
-    public class ObterContatoPorNomeEmailIntegrationTests : IClassFixture<SqlServerTests>
+    public class ObterContatoPorNomeEmailIntegrationTests : IClassFixture<IntegrationTestsFixture>
     {
         private readonly ObterContatoPorNomeEmailUseCase _useCase;
         private readonly ContatoRepository _repository;
 
-        public ObterContatoPorNomeEmailIntegrationTests(SqlServerTests fixture)
+        public ObterContatoPorNomeEmailIntegrationTests(IntegrationTestsFixture fixture)
         {
-            _repository = fixture.contatoRepository;
+            _repository = fixture.ContatoRepository;
             _useCase = new ObterContatoPorNomeEmailUseCase(_repository);
         }
 
