@@ -16,22 +16,22 @@ namespace ContatosGrupo4.Tests.Integration
 {
     public class IntegrationTestsFixture : IAsyncLifetime
     {
-        private readonly MsSqlContainer _dbContainer = new MsSqlBuilder().Build();
-        private readonly RabbitMqContainer _rabbitMqContainer = new RabbitMqBuilder().Build();
+        public readonly MsSqlContainer DbContainer = new MsSqlBuilder().Build();
+        public readonly RabbitMqContainer RabbitContainer = new RabbitMqBuilder().Build();
         private AppDbContext _dbContext = null!;
         public ContatoRepository ContatoRepository = null!;
         public IMemoryCache MemoryCache = null!;
-        private ConnectionFactory _connectionFactory = null!;
+        public ConnectionFactory ConnectionFactory = null!;
         public RabbitMQPublisher RabbitMQPublisher = null!;
         public IOptions<RabbitMQOptions> RabbitMqOptions = null!;
 
         public async Task InitializeAsync()
         {
             // banco de dados
-            await _dbContainer.StartAsync();
+            await DbContainer.StartAsync();
 
             var options = new DbContextOptionsBuilder<AppDbContext>()
-                .UseSqlServer(_dbContainer.GetConnectionString())
+                .UseSqlServer(DbContainer.GetConnectionString())
                 .Options;
 
             _dbContext = new AppDbContext(options);
@@ -47,14 +47,14 @@ namespace ContatosGrupo4.Tests.Integration
             MemoryCache = new MemoryCache(new MemoryCacheOptions());
 
             // rabbit
-            await _rabbitMqContainer.StartAsync();
+            await RabbitContainer.StartAsync();
 
-            _connectionFactory = new ConnectionFactory()
+            ConnectionFactory = new ConnectionFactory()
             {
-                Uri = new Uri(_rabbitMqContainer.GetConnectionString())
+                Uri = new Uri(RabbitContainer.GetConnectionString())
             };
 
-            RabbitMQPublisher = new RabbitMQPublisher(_connectionFactory);
+            RabbitMQPublisher = new RabbitMQPublisher(ConnectionFactory);
 
             var rabbitMqOptions = new RabbitMQOptions
             {
@@ -74,13 +74,13 @@ namespace ContatosGrupo4.Tests.Integration
 
         public async Task DisposeAsync()
         {
-            await _dbContainer.DisposeAsync();
-            await _rabbitMqContainer.DisposeAsync();
+            await DbContainer.DisposeAsync();
+            await RabbitContainer.DisposeAsync();
         }
 
         public async Task<T?> ConsumeMessageAsync<T>(string queueName, TimeSpan timeout) where T : class
         {
-            using var connection = await _connectionFactory.CreateConnectionAsync();
+            using var connection = await ConnectionFactory.CreateConnectionAsync();
             using var channel = await connection.CreateChannelAsync();
 
             await channel.QueueDeclareAsync(

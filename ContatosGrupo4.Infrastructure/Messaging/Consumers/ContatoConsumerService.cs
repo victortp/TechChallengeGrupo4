@@ -4,7 +4,6 @@ using ContatosGrupo4.Application.Configurations;
 using ContatosGrupo4.Application.DTOs;
 using ContatosGrupo4.Domain.Entities;
 using ContatosGrupo4.Domain.Interfaces;
-using ContatosGrupo4.Infrastructure.Data.Repositories;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
